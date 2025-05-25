@@ -2,54 +2,54 @@
 	<div class="job-board">
 		<!-- Sidebar Filters -->
 		<aside class="sidebar">
-			<h2 class="sidebar-title">Filtruj oferty</h2>
+			<h2 class="sidebar-title">Filter Jobs</h2>
 			
 			<div class="filters">
 				<div class="filter-group">
-					<label class="filter-label">Słowa kluczowe</label>
+					<label class="filter-label">Keywords</label>
 					<input 
 						v-model="filters.keyword" 
 						type="text" 
-						placeholder="np. Frontend" 
+						placeholder="e.g. Frontend" 
 						class="filter-input"
 					/>
 				</div>
 				
 				<div class="filter-group">
-					<label class="filter-label">Lokalizacja</label>
+					<label class="filter-label">Location</label>
 					<input 
 						v-model="filters.location" 
 						type="text" 
-						placeholder="Miasto lub region" 
+						placeholder="City or region" 
 						class="filter-input"
 					/>
 				</div>
 				
 				<div class="filter-group">
-					<p class="filter-label">Typ umowy</p>
+					<p class="filter-label">Contract Type</p>
 					<div class="checkbox-group">
 						<label class="checkbox-label">
 							<input type="checkbox" value="Full-time" v-model="filters.types" class="checkbox-input" />
-							<span class="checkbox-text">Pełny etat</span>
+							<span class="checkbox-text">Full-time</span>
 						</label>
 						<label class="checkbox-label">
 							<input type="checkbox" value="Part-time" v-model="filters.types" class="checkbox-input" />
-							<span class="checkbox-text">Część etatu</span>
+							<span class="checkbox-text">Part-time</span>
 						</label>
 						<label class="checkbox-label">
 							<input type="checkbox" value="Contract" v-model="filters.types" class="checkbox-input" />
-							<span class="checkbox-text">Umowa zlecenie</span>
+							<span class="checkbox-text">Contract</span>
 						</label>
 					</div>
 				</div>
 				
 				<div class="filter-group">
-					<label class="filter-label">Poziom doświadczenia</label>
+					<label class="filter-label">Experience Level</label>
 					<select 
 						v-model="filters.experience" 
 						class="filter-select"
 					>
-						<option value="">Dowolny</option>
+						<option value="">Any</option>
 						<option>Junior</option>
 						<option>Mid</option>
 						<option>Senior</option>
@@ -58,30 +58,30 @@
 				</div>
 				
 				<div class="filter-group">
-					<label class="filter-label">Data publikacji</label>
+					<label class="filter-label">Posted Date</label>
 					<select 
 						v-model="filters.posted" 
 						class="filter-select"
 					>
-						<option value="">Dowolnie</option>
-						<option value="1">Ostatnie 24h</option>
-						<option value="7">Ostatnie 7 dni</option>
-						<option value="30">Ostatnie 30 dni</option>
+						<option value="">Anytime</option>
+						<option value="1">Last 24 hours</option>
+						<option value="7">Last 7 days</option>
+						<option value="30">Last 30 days</option>
 					</select>
 				</div>
 				
 				<div class="filter-group">
-					<label class="filter-label">Umiejętności</label>
+					<label class="filter-label">Skills</label>
 					<input 
 						v-model="filters.skills" 
 						type="text" 
-						placeholder="np. Vue, React" 
+						placeholder="e.g. Vue, React" 
 						class="filter-input"
 					/>
 				</div>
 				
 				<div class="filter-group">
-					<label class="filter-label">Wynagrodzenie (PLN)</label>
+					<label class="filter-label">Salary (USD)</label>
 					<div class="dual-range-container">
 						<input 
 							type="range" 
@@ -101,31 +101,31 @@
 						/>
 					</div>
 					<div class="range-values">
-						<span>{{ minSalary }}k</span>
-						<span class="current-values">{{ filters.salaryMin }}k - {{ filters.salaryMax }}k</span>
-						<span>{{ maxSalary }}k</span>
+						<span>${{ minSalary }}k</span>
+						<span class="current-values">${{ filters.salaryMin }}k - ${{ filters.salaryMax }}k</span>
+						<span>${{ maxSalary }}k</span>
 					</div>
 				</div>
 				
 				<div class="filter-buttons">
-					<button 
+					<BaseButton 
 						@click="handleApplyFilters" 
 						@keydown="handleKeyDown"
 						tabindex="0"
-						aria-label="Zastosuj filtry"
-						class="btn btn-primary"
-					>
-						Pokaż
-					</button>
-					<button 
+						aria-label="Apply filters"
+						variant="filter-primary"
+						size="medium"
+						text="Show Jobs"
+					/>
+					<BaseButton 
 						@click="handleResetFilters" 
 						@keydown="handleKeyDown"
 						tabindex="0"
-						aria-label="Wyczyść filtry"
-						class="btn btn-secondary"
-					>
-						Wyczyść
-					</button>
+						aria-label="Clear filters"
+						variant="filter-secondary"
+						size="medium"
+						text="Clear"
+					/>
 				</div>
 			</div>
 		</aside>
@@ -142,63 +142,33 @@
 							<path d="M20 6H16V4C16 2.89 15.11 2 14 2H10C8.89 2 8 2.89 8 4V6H4C3.45 6 3 6.45 3 7S3.45 8 4 8H5V19C5 20.1 5.9 21 7 21H17C18.1 21 19 20.1 19 19V8H20C20.55 8 21 7.55 21 7S20.55 6 20 6ZM10 4H14V6H10V4Z" fill="#9CA3AF"/>
 						</svg>
 					</div>
-					<h3 class="no-jobs-title">Brak ofert pracy</h3>
+					<h3 class="no-jobs-title">No Jobs Found</h3>
 					<p class="no-jobs-description">
-						Nie znaleźliśmy żadnych ofert pasujących do Twoich kryteriów wyszukiwania.
+						We couldn't find any jobs matching your search criteria.
 					</p>
 					<p class="no-jobs-suggestion">
-						Spróbuj zmienić filtry lub rozszerzyć kryteria wyszukiwania.
+						Try adjusting your filters or broadening your search criteria.
 					</p>
-					<button 
+					<BaseButton 
 						@click="handleResetFilters"
 						@keydown="handleKeyDown"
 						tabindex="0"
-						aria-label="Wyczyść wszystkie filtry"
-						class="btn btn-primary no-jobs-btn"
-					>
-						Wyczyść filtry
-					</button>
+						aria-label="Clear all filters"
+						variant="filter-primary"
+						size="medium"
+						text="Clear Filters"
+						class="no-jobs-btn"
+					/>
 				</div>
 			</div>
 			
-			<div class="pagination">
-				<button 
-					@click="handlePrevPage"
-					@keydown="handleKeyDown"
-					tabindex="0"
-					aria-label="Poprzednia strona"
-					class="pagination-btn"
-				>
-					&laquo;
-				</button>
-				<button 
-					@click="handlePageClick(1)"
-					@keydown="handleKeyDown"
-					tabindex="0"
-					aria-label="Strona 1"
-					class="pagination-btn active"
-				>
-					1
-				</button>
-				<button 
-					@click="handlePageClick(2)"
-					@keydown="handleKeyDown"
-					tabindex="0"
-					aria-label="Strona 2"
-					class="pagination-btn"
-				>
-					2
-				</button>
-				<button 
-					@click="handleNextPage"
-					@keydown="handleKeyDown"
-					tabindex="0"
-					aria-label="Następna strona"
-					class="pagination-btn"
-				>
-					&raquo;
-				</button>
-			</div>
+			<BasePagination 
+				:current-page="currentPage"
+				:total-pages="totalPages"
+				@page-change="handlePageChange"
+				@prev-page="handlePrevPage"
+				@next-page="handleNextPage"
+			/>
 		</main>
 	</div>
 </template>
@@ -206,6 +176,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import JobCard from '../components/JobCard.vue';
+import BaseButton from '../components/ui/Button.vue';
+import BasePagination from '../components/ui/Pagination.vue';
 import type { Job, Filters } from '../types/job';
 
 const jobs = ref<Job[]>([
@@ -213,39 +185,39 @@ const jobs = ref<Job[]>([
 		id: 1, 
 		title: 'Frontend Developer', 
 		company: 'Acme Corp', 
-		location: 'Warszawa', 
+		location: 'New York', 
 		postedDays: 2, 
 		type: 'Full-time', 
 		experience: 'Mid', 
 		salaryMin: 100, 
 		salaryMax: 140, 
-		description: 'Dołącz do zespołu front-end i twórz nowoczesne aplikacje webowe używając najnowszych technologii.', 
+		description: 'Join our front-end team and build modern web applications using the latest technologies.', 
 		skills: ['Vue', 'JavaScript', 'TypeScript'] 
 	},
 	{ 
 		id: 2, 
 		title: 'Backend Engineer', 
 		company: 'Tech Solutions', 
-		location: 'Kraków', 
+		location: 'San Francisco', 
 		postedDays: 5, 
 		type: 'Contract', 
 		experience: 'Senior', 
 		salaryMin: 120, 
 		salaryMax: 160, 
-		description: 'Projektowanie i implementacja skalowalnych API oraz systemów backendowych.', 
+		description: 'Design and implement scalable APIs and backend systems.', 
 		skills: ['Node.js', 'Express', 'MongoDB'] 
 	},
 	{ 
 		id: 3, 
 		title: 'Full Stack Developer', 
 		company: 'StartupXYZ', 
-		location: 'Gdańsk', 
+		location: 'Austin', 
 		postedDays: 1, 
 		type: 'Full-time', 
 		experience: 'Junior', 
 		salaryMin: 80, 
 		salaryMax: 110, 
-		description: 'Praca nad kompletnym stosem technologicznym w dynamicznym środowisku startupowym.', 
+		description: 'Work on the complete technology stack in a dynamic startup environment.', 
 		skills: ['React', 'Node.js', 'PostgreSQL'] 
 	}
 ]);
@@ -263,6 +235,11 @@ const filters = ref<Filters>({
 	salaryMin: minSalary,
 	salaryMax: maxSalary 
 });
+
+// Pagination state
+const currentPage = ref(1);
+const itemsPerPage = 10;
+const totalPages = computed(() => Math.ceil(filteredJobs.value.length / itemsPerPage));
 
 const filteredJobs = computed(() => {
 	return jobs.value.filter(job => {
@@ -295,7 +272,7 @@ const filteredJobs = computed(() => {
 });
 
 function handleApplyFilters() {
-	console.log('Zastosowano filtry:', filters.value);
+	console.log('Applied filters:', filters.value);
 }
 
 function handleResetFilters() {
@@ -323,16 +300,17 @@ function handleSalaryMaxChange() {
 	}
 }
 
-function handlePageClick(page: number) {
-	console.log('Przejście do strony:', page);
+function handlePageChange(page: number) {
+	currentPage.value = page;
+	console.log('Navigate to page:', page);
 }
 
 function handlePrevPage() {
-	console.log('Poprzednia strona');
+	console.log('Previous page');
 }
 
 function handleNextPage() {
-	console.log('Następna strona');
+	console.log('Next page');
 }
 
 function handleKeyDown(event: KeyboardEvent) {
@@ -505,44 +483,8 @@ function handleKeyDown(event: KeyboardEvent) {
 	padding-top: 16px;
 }
 
-.btn {
+.filter-buttons .button {
 	flex: 1;
-	padding: 10px 16px;
-	font-size: 14px;
-	font-weight: 500;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	transition: all 0.2s ease-in-out;
-}
-
-.btn-primary {
-	background-color: #3b82f6;
-	color: #ffffff;
-}
-
-.btn-primary:hover {
-	background-color: #2563eb;
-}
-
-.btn-primary:focus {
-	outline: none;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-.btn-secondary {
-	background-color: #ffffff;
-	color: #374151;
-	border: 1px solid #d1d5db;
-}
-
-.btn-secondary:hover {
-	background-color: #f9fafb;
-}
-
-.btn-secondary:focus {
-	outline: none;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 .main-content {
@@ -558,37 +500,7 @@ function handleKeyDown(event: KeyboardEvent) {
 	margin-bottom: 24px;
 }
 
-.pagination {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 8px;
-}
 
-.pagination-btn {
-	padding: 8px 12px;
-	border: 1px solid #d1d5db;
-	background-color: #ffffff;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 14px;
-	transition: all 0.2s ease-in-out;
-}
-
-.pagination-btn:hover {
-	background-color: #f9fafb;
-}
-
-.pagination-btn:focus {
-	outline: none;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-.pagination-btn.active {
-	background-color: #3b82f6;
-	color: #ffffff;
-	border-color: #3b82f6;
-}
 
 .no-jobs-placeholder {
 	display: flex;
