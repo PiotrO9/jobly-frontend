@@ -32,7 +32,7 @@ import MenuItem from '@/components/ui/MenuItem.vue'
 					</MenuItem>
 				</ul>
 			</nav>
-			<Button variant="primary" text="Post a job" />
+			<Button variant="primary" text="Login" />
 		</div>
 	</header>
 </template>
