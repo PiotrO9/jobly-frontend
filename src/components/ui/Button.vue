@@ -56,195 +56,170 @@ withDefaults(defineProps<Props>(), {
 	margin: 0;
 	border-width: 1px;
 	border-style: solid;
+}
 
-	&.primary {
-		background-color: var(--color-primary);
-		border-color: var(--color-primary);
-		color: var(--color-background);
-		font-weight: 700;
-		
-		&:hover {
-			background-color: var(--color-primary-hover);
-			border-color: var(--color-primary-hover);
-		}
-	}
+.button:hover {
+	translate: 0 -3px;
+	background-color: var(--color-primary-hover);
+}
 
-	&.secondary {
-		background-color: var(--color-background);
-		border-color: #e4e4ed;
-		color: #33334e;
-		font-weight: 500;
-		
-		&:hover {
-			background-color: var(--color-primary);
-			border-color: var(--color-secondary);
-			color: var(--color-background);
-		}
-	}
+.button.primary {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-background);
+	font-weight: 700;
+}
 
-	/* Filter button variants */
-	&.filter-primary {
-		background-color: #3b82f6;
-		color: #ffffff;
-		border: none;
-		border-radius: 6px;
-		font-weight: 500;
-		font-size: 14px;
-		
-		&:hover {
-			background-color: #2563eb;
-			translate: none;
-		}
-		
-		&:focus {
-			outline: none;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-		}
-	}
+.button.primary:hover {
+	background-color: var(--color-primary-hover);
+	border-color: var(--color-primary-hover);
+}
 
-	&.filter-secondary {
-		background-color: #ffffff;
-		color: #374151;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		font-weight: 500;
-		font-size: 14px;
-		
-		&:hover {
-			background-color: #f9fafb;
-			translate: none;
-		}
-		
-		&:focus {
-			outline: none;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-		}
-	}
+.button.secondary {
+	background-color: var(--color-background);
+	border-color: #e4e4ed;
+	color: #33334e;
+	font-weight: 500;
+}
 
-	/* Pagination button variant */
-	&.pagination {
-		background-color: #ffffff;
-		color: #374151;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		font-size: 14px;
-		font-weight: normal;
-		
-		&:hover {
-			background-color: #f9fafb;
-			translate: none;
-		}
-		
-		&:focus {
-			outline: none;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-		}
-		
-		&.active {
-			background-color: #3b82f6;
-			color: #ffffff;
-			border-color: #3b82f6;
-		}
-	}
+.button.secondary:hover {
+	background-color: var(--color-primary);
+	border-color: var(--color-secondary);
+	color: var(--color-background);
+}
 
-	/* Apply button variant */
-	&.apply {
-		background-color: #2563eb;
-		color: #ffffff;
-		border: none;
-		border-radius: 6px;
-		font-size: 14px;
-		font-weight: 500;
-		
-		&:hover {
-			background-color: #1d4ed8;
-			translate: none;
-		}
-		
-		&:focus {
-			outline: none;
-			box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
-		}
-	}
+.button.filter-primary {
+	background-color: #3b82f6;
+	color: #ffffff;
+	border: none;
+	border-radius: 6px;
+	font-weight: 500;
+	font-size: 14px;
+}
 
-	&:hover {
-		translate: 0 -3px;
-		background-color: var(--color-primary-hover);
-	}
+.button.filter-primary:hover {
+	background-color: #2563eb;
+	translate: none;
+}
 
-	/* Override hover translate for specific variants */
-	&.filter-primary:hover,
-	&.filter-secondary:hover,
-	&.pagination:hover,
-	&.apply:hover {
-		translate: none;
-	}
+.button.filter-primary:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
 
-	.text {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 999px;
-	}
+.button.filter-secondary {
+	background-color: #ffffff;
+	color: #374151;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-weight: 500;
+	font-size: 14px;
+}
 
-	&.small {
-		.text {
-			padding: 16px 24px;
-		}
-	}
+.button.filter-secondary:hover {
+	background-color: #f9fafb;
+	translate: none;
+}
 
-	&.medium {
-		.text {
-			padding: 10px 16px;
-		}
-		
-		&.pagination .text {
-			padding: 8px 12px;
-		}
-		
-		&.apply .text {
-			padding: 8px 16px;
-		}
-	}
+.button.filter-secondary:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
 
-	&.big {
-		.text {
-			padding: 22px 40px;
-		}
-	}
+.button.pagination {
+	background-color: #ffffff;
+	color: #374151;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: normal;
+}
 
-	/* Special styling for filter buttons */
-	&.filter-primary,
-	&.filter-secondary {
-		.text {
-			border-radius: 6px;
-		}
-	}
+.button.pagination:hover {
+	background-color: #f9fafb;
+	translate: none;
+}
 
-	/* Special styling for pagination buttons */
-	&.pagination {
-		.text {
-			border-radius: 6px;
-		}
-	}
+.button.pagination:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
 
-	/* Special styling for apply button */
-	&.apply {
-		.text {
-			border-radius: 6px;
-		}
-	}
+.button.pagination.active {
+	background-color: #3b82f6;
+	color: #ffffff;
+	border-color: #3b82f6;
+}
 
-	/* Disabled state */
-	&.disabled,
-	&:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-		pointer-events: none;
-		
-		&:hover {
-			translate: none;
-		}
-	}
+.button.apply {
+	background-color: #2563eb;
+	color: #ffffff;
+	border: none;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.button.apply:hover {
+	background-color: #1d4ed8;
+	translate: none;
+}
+
+.button.apply:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.button.filter-primary:hover,
+.button.filter-secondary:hover,
+.button.pagination:hover,
+.button.apply:hover {
+	translate: none;
+}
+
+.button.disabled,
+.button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.button.disabled:hover,
+.button:disabled:hover {
+	translate: none;
+}
+
+.text {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+}
+
+.button.small .text {
+	padding: 16px 24px;
+}
+
+.button.medium .text {
+	padding: 10px 16px;
+}
+
+.button.medium.pagination .text {
+	padding: 8px 12px;
+}
+
+.button.medium.apply .text {
+	padding: 8px 16px;
+}
+
+.button.big .text {
+	padding: 22px 40px;
+}
+
+.button.filter-primary .text,
+.button.filter-secondary .text,
+.button.pagination .text,
+.button.apply .text {
+	border-radius: 6px;
 }
 </style>
