@@ -12,6 +12,16 @@ const router = createRouter({
 		path: '/design-system',
 		name: 'design-system',
 		component: () => import('../views/DesignSystemView.vue')
+	},
+	{
+		path: '/jobs',
+		name: 'jobs',
+		component: () => import('../views/JobsView.vue')
+	},
+	{
+		path: '/post-job',
+		name: 'post-job',
+		component: () => import('../views/PostJobView.vue')
 	}
   ],
 })

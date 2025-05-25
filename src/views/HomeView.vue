@@ -1,15 +1,47 @@
+<script setup lang="ts">
+import Button from '@/components/ui/Button.vue'
+</script>
+
 <template>
-	<main class="home">
-		<h1>test</h1>
-	</main>
+	<div class="home-layout">
+		<h1 class="home-layout-title">Jobly – Career Opportunities Marketplace</h1>
+		<p class="home-layout-description">
+			Jobly – Connecting employers with top talent
+		</p>
+		<div class="button-wrapper">
+			<Button variant="primary" text="Find a job" size="big" link="/jobs" />
+			<Button variant="secondary" text="Post a job" size="big" link="/post-job" />
+		</div>
+	</div>
 </template>
 
 <style scoped>
-.home {
-	background-color: linear-gradient(to top, white 56%, var(--secondary-2) 56%);
+.home-layout {
+	background-color: #f2f5ff;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	gap: 40px;
+
+	.home-layout-title {
+		font-size: 80px;
+		font-weight: 500;
+		color: var(--text-color);
+		text-align: center;
+	}
+
+	.home-layout-description {
+		font-size: 20px;
+		font-weight: 400;
+		color: var(--gray-600);
+	}
+}
+
+.button-wrapper {
+	display: flex;
+	gap: 20px;
 }
 </style>
