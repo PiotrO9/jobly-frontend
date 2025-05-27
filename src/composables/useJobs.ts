@@ -17,7 +17,7 @@ export function useJobs() {
 	const itemsPerPage = 10
 	
 	// Convert database job to component job format
-	function transformDatabaseJobToComponent(dbJob: DatabaseJob & { company?: { name: string } }): ComponentJob {
+	function transformDatabaseJobToComponent(dbJob: DatabaseJob & { company?: { id: string; name: string; description?: string; logo_url?: string } }): ComponentJob {
 		return {
 			id: dbJob.id,
 			title: dbJob.title,
@@ -29,7 +29,18 @@ export function useJobs() {
 			salaryMin: dbJob.salary_min || 0,
 			salaryMax: dbJob.salary_max || 0,
 			description: dbJob.description || '',
-			skills: dbJob.skills || []
+			skills: dbJob.skills || [],
+			requirements: dbJob.requirements || [],
+			benefits: dbJob.benefits || [],
+			equity: dbJob.equity || 0,
+			remoteAllowed: dbJob.remote_allowed || false,
+			currency: dbJob.currency || 'PLN',
+			companyDetails: dbJob.company ? {
+				id: dbJob.company.id,
+				name: dbJob.company.name,
+				description: dbJob.company.description,
+				logoUrl: dbJob.company.logo_url
+			} : undefined
 		}
 	}
 	

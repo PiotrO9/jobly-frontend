@@ -14,7 +14,38 @@
 				<span>Back to Jobs</span>
 			</button>
 
-			<div class="job-card">
+			<!-- Loading State -->
+			<div v-if="loading" class="loading-state">
+				<div class="loading-spinner">
+					<svg class="animate-spin" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					</svg>
+				</div>
+				<p class="loading-text">Loading job details...</p>
+			</div>
+
+			<!-- Error State -->
+			<div v-else-if="notFound || error" class="error-state">
+				<div class="error-icon">
+					<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+					</svg>
+				</div>
+				<h3 class="error-title">Job Not Found</h3>
+				<p class="error-message">
+					{{ notFound ? 'The job you are looking for does not exist.' : 'There was an error loading the job details.' }}
+				</p>
+				<BaseButton 
+					@click="handleGoBack" 
+					variant="primary" 
+					text="Back to Jobs"
+					class="error-back-btn"
+				/>
+			</div>
+
+			<!-- Job Details -->
+			<div v-else-if="job" class="job-card">
 				<div class="job-header">
 					<div class="job-main-info">
 						<h1 class="job-title">{{ job.title }}</h1>
@@ -71,51 +102,80 @@
 					<section class="job-section">
 						<h3 class="section-title">Requirements</h3>
 						<ul class="requirements-list">
-							<li class="requirement-item">
-								{{ job.experience }} level experience in {{ job.skills[0] }} development
+							<li 
+								v-for="requirement in job.requirements" 
+								:key="requirement" 
+								class="requirement-item"
+							>
+								{{ requirement }}
 							</li>
-							<li class="requirement-item">
-								Strong understanding of modern development practices
-							</li>
-							<li class="requirement-item">
-								Experience with collaborative development workflows
-							</li>
-							<li class="requirement-item">
-								Excellent communication and problem-solving skills
-							</li>
-							<li class="requirement-item">
-								Bachelor's degree in Computer Science or related field (preferred)
-							</li>
+							<!-- Fallback requirements if none from database -->
+							<template v-if="!job.requirements || job.requirements.length === 0">
+								<li class="requirement-item">
+									{{ job.experience }} level experience in {{ job.skills[0] || 'relevant technology' }} development
+								</li>
+								<li class="requirement-item">
+									Strong understanding of modern development practices
+								</li>
+								<li class="requirement-item">
+									Experience with collaborative development workflows
+								</li>
+								<li class="requirement-item">
+									Excellent communication and problem-solving skills
+								</li>
+								<li class="requirement-item">
+									Bachelor's degree in Computer Science or related field (preferred)
+								</li>
+							</template>
 						</ul>
 					</section>
 
 					<section class="job-section">
 						<h3 class="section-title">What We Offer</h3>
 						<ul class="benefits-list">
-							<li class="benefit-item">
+							<li 
+								v-for="benefit in job.benefits" 
+								:key="benefit" 
+								class="benefit-item"
+							>
 								<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 								</svg>
-								<span>Competitive salary and benefits package</span>
+								<span>{{ benefit }}</span>
 							</li>
-							<li class="benefit-item">
-								<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-								</svg>
-								<span>Remote work flexibility</span>
-							</li>
-							<li class="benefit-item">
-								<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-								</svg>
-								<span>Professional development opportunities</span>
-							</li>
-							<li class="benefit-item">
-								<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-								</svg>
-								<span>Collaborative team environment</span>
-							</li>
+							<!-- Fallback benefits if none from database -->
+							<template v-if="!job.benefits || job.benefits.length === 0">
+								<li class="benefit-item">
+									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+									</svg>
+									<span>Competitive salary and benefits package</span>
+								</li>
+								<li class="benefit-item">
+									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+									</svg>
+									<span>{{ job.remoteAllowed ? 'Remote work flexibility' : 'On-site collaboration' }}</span>
+								</li>
+								<li class="benefit-item">
+									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+									</svg>
+									<span>Professional development opportunities</span>
+								</li>
+								<li class="benefit-item">
+									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+									</svg>
+									<span>Collaborative team environment</span>
+								</li>
+								<li v-if="job.equity && job.equity > 0" class="benefit-item">
+									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+									</svg>
+									<span>Equity package ({{ (job.equity * 100).toFixed(3) }}%)</span>
+								</li>
+							</template>
 						</ul>
 					</section>
 				</div>
@@ -151,38 +211,57 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import BaseButton from '../components/ui/Button.vue';
+import { useJobs } from '../composables/useJobs';
 import type { Job } from '../types/job';
 
 const router = useRouter();
 const route = useRoute();
 
-// Mock job data - in real app this would come from API or store
-const job = ref<Job>({
-	id: 1,
-	title: 'Frontend Developer',
-	company: 'Acme Corp',
-	location: 'New York',
-	postedDays: 2,
-	type: 'Full-time',
-	experience: 'Mid',
-	salaryMin: 100,
-	salaryMax: 140,
-	description: 'Join our front-end team and build modern web applications using the latest technologies.',
-	skills: ['Vue', 'JavaScript', 'TypeScript']
-});
+// Use real data from database
+const { getJobById, loading, error } = useJobs();
+
+const job = ref<Job | null>(null);
+const notFound = ref(false);
+
+async function loadJobDetails() {
+	const jobId = route.params.id as string;
+	
+	if (!jobId) {
+		notFound.value = true;
+		return;
+	}
+	
+	try {
+		const result = await getJobById(jobId);
+		
+		if (result.success && result.data) {
+			job.value = result.data;
+		} else {
+			console.error('Error loading job details:', result.error);
+			notFound.value = true;
+		}
+	} catch (err) {
+		console.error('Error loading job details:', err);
+		notFound.value = true;
+	}
+}
 
 function handleGoBack() {
 	router.push('/jobs');
 }
 
 function handleApplyJob() {
-	console.log('Applying for job:', job.value.id);
-	// Here you would typically navigate to application form or open modal
+	if (job.value) {
+		console.log('Applying for job:', job.value.id);
+		// Here you would typically navigate to application form or open modal
+	}
 }
 
 function handleSaveJob() {
-	console.log('Saving job:', job.value.id);
-	// Here you would typically save job to user's saved jobs
+	if (job.value) {
+		console.log('Saving job:', job.value.id);
+		// Here you would typically save job to user's saved jobs
+	}
 }
 
 function handleKeyDown(event: KeyboardEvent) {
@@ -193,12 +272,7 @@ function handleKeyDown(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-	// In real app, fetch job details based on route.params.id
-	const jobId = route.params.id;
-	console.log('Loading job details for ID:', jobId);
-	
-	// Mock data loading - replace with actual API call
-	// fetchJobDetails(jobId);
+	loadJobDetails();
 });
 </script>
 
@@ -454,6 +528,83 @@ onMounted(() => {
 .apply-button,
 .save-button {
 	width: 100%;
+}
+
+/* Loading State */
+.loading-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 4rem 2rem;
+	text-align: center;
+}
+
+.loading-spinner {
+	margin-bottom: 1rem;
+}
+
+.loading-spinner svg {
+	width: 3rem;
+	height: 3rem;
+	color: #3b82f6;
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.loading-text {
+	font-size: 1.125rem;
+	color: #6b7280;
+	margin: 0;
+}
+
+/* Error State */
+.error-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 4rem 2rem;
+	text-align: center;
+}
+
+.error-icon {
+	margin-bottom: 1rem;
+}
+
+.error-icon svg {
+	width: 4rem;
+	height: 4rem;
+	color: #dc2626;
+}
+
+.error-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0 0 0.5rem 0;
+}
+
+.error-message {
+	font-size: 1rem;
+	color: #6b7280;
+	margin: 0 0 2rem 0;
+	max-width: 28rem;
+}
+
+.error-back-btn {
+	width: auto;
 }
 
 @media (min-width: 640px) {

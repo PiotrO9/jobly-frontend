@@ -10,6 +10,19 @@ export interface Job {
 	salaryMax: number; // Maps to salary_max from database
 	description: string;
 	skills: string[];
+	// Additional fields for detailed view
+	requirements?: string[];
+	benefits?: string[];
+	equity?: number;
+	remoteAllowed?: boolean;
+	currency?: string;
+	// Company details (when joined)
+	companyDetails?: {
+		id: string;
+		name: string;
+		description?: string;
+		logoUrl?: string;
+	};
 }
 
 export interface Filters {
