@@ -34,7 +34,33 @@
 
 		<main class="main-content">
 			<div class="content-wrapper">
-				<div class="job-list">
+				<div v-if="jobsLoading" class="loading-state">
+					<div class="loading-spinner">
+						<svg class="spinner-icon" fill="none" viewBox="0 0 24 24">
+							<circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+					</div>
+					<p class="loading-text">Loading jobs...</p>
+				</div>
+
+				<div v-else-if="jobsError" class="error-state">
+					<div class="error-icon">
+						<svg class="error-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+						</svg>
+					</div>
+					<h3 class="error-title">Error loading jobs</h3>
+					<p class="error-message">{{ jobsError }}</p>
+					<BaseButton 
+						@click="loadJobs" 
+						variant="primary" 
+						text="Try Again"
+						class="error-retry-btn"
+					/>
+				</div>
+
+				<div v-else class="job-list">
 					<JobCard v-for="job in paginatedJobs" :key="job.id" :job="job" />
 					
 					<div v-if="filteredJobs.length === 0" class="no-jobs-placeholder">
@@ -73,19 +99,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import JobCard from '../components/JobCard.vue';
 import BaseButton from '../components/ui/Button.vue';
 import BasePagination from '../components/ui/Pagination.vue';
 import JobFilters from '../components/JobFilters.vue';
-import type { Job, Filters } from '../types/job';
+import { useJobs } from '../composables/useJobs';
+import type { Filters } from '../types/job';
 
 const SALARY_RANGE = {
 	min: 50,
 	max: 200
 } as const;
 
-const ITEMS_PER_PAGE = 10;
+
 
 const showMobileFilters = ref(false);
 
@@ -114,268 +141,16 @@ watch(showMobileFilters, (isOpen) => {
 	}
 });
 
-const jobs = ref<Job[]>([
-	{ 
-		id: 1, 
-		title: 'Frontend Developer', 
-		company: 'Acme Corp', 
-		location: 'New York', 
-		postedDays: 2, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 100, 
-		salaryMax: 140, 
-		description: 'Join our front-end team and build modern web applications using the latest technologies.', 
-		skills: ['Vue', 'JavaScript', 'TypeScript'] 
-	},
-	{ 
-		id: 2, 
-		title: 'Backend Engineer', 
-		company: 'Tech Solutions', 
-		location: 'San Francisco', 
-		postedDays: 5, 
-		type: 'Contract', 
-		experience: 'Senior', 
-		salaryMin: 120, 
-		salaryMax: 160, 
-		description: 'Design and implement scalable APIs and backend systems.', 
-		skills: ['Node.js', 'Express', 'MongoDB'] 
-	},
-	{ 
-		id: 3, 
-		title: 'Full Stack Developer', 
-		company: 'StartupXYZ', 
-		location: 'Austin', 
-		postedDays: 1, 
-		type: 'Full-time', 
-		experience: 'Junior', 
-		salaryMin: 80, 
-		salaryMax: 110, 
-		description: 'Work on the complete technology stack in a dynamic startup environment.', 
-		skills: ['React', 'Node.js', 'PostgreSQL'] 
-	},
-	{ 
-		id: 4, 
-		title: 'DevOps Engineer', 
-		company: 'CloudTech Inc', 
-		location: 'Seattle', 
-		postedDays: 3, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 130, 
-		salaryMax: 170, 
-		description: 'Manage cloud infrastructure and automate deployment processes.', 
-		skills: ['AWS', 'Docker', 'Kubernetes'] 
-	},
-	{ 
-		id: 5, 
-		title: 'UX Designer', 
-		company: 'Design Studio', 
-		location: 'Los Angeles', 
-		postedDays: 4, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 90, 
-		salaryMax: 120, 
-		description: 'Create intuitive user experiences for web and mobile applications.', 
-		skills: ['Figma', 'Adobe XD', 'Prototyping'] 
-	},
-	{ 
-		id: 6, 
-		title: 'Data Scientist', 
-		company: 'Analytics Pro', 
-		location: 'Chicago', 
-		postedDays: 2, 
-		type: 'Contract', 
-		experience: 'Senior', 
-		salaryMin: 140, 
-		salaryMax: 180, 
-		description: 'Analyze complex datasets and build predictive models.', 
-		skills: ['Python', 'Machine Learning', 'SQL'] 
-	},
-	{ 
-		id: 7, 
-		title: 'Mobile Developer', 
-		company: 'AppWorks', 
-		location: 'Miami', 
-		postedDays: 6, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 95, 
-		salaryMax: 125, 
-		description: 'Develop native mobile applications for iOS and Android.', 
-		skills: ['React Native', 'Swift', 'Kotlin'] 
-	},
-	{ 
-		id: 8, 
-		title: 'Product Manager', 
-		company: 'Innovation Labs', 
-		location: 'Boston', 
-		postedDays: 1, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 110, 
-		salaryMax: 150, 
-		description: 'Lead product strategy and coordinate cross-functional teams.', 
-		skills: ['Product Strategy', 'Agile', 'Data Analysis'] 
-	},
-	{ 
-		id: 9, 
-		title: 'QA Engineer', 
-		company: 'Quality First', 
-		location: 'Denver', 
-		postedDays: 7, 
-		type: 'Full-time', 
-		experience: 'Junior', 
-		salaryMin: 70, 
-		salaryMax: 95, 
-		description: 'Ensure software quality through comprehensive testing.', 
-		skills: ['Selenium', 'Jest', 'Cypress'] 
-	},
-	{ 
-		id: 10, 
-		title: 'Security Engineer', 
-		company: 'SecureNet', 
-		location: 'Washington DC', 
-		postedDays: 3, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 135, 
-		salaryMax: 175, 
-		description: 'Implement security measures and conduct vulnerability assessments.', 
-		skills: ['Cybersecurity', 'Penetration Testing', 'CISSP'] 
-	},
-	{ 
-		id: 11, 
-		title: 'UI Developer', 
-		company: 'Creative Agency', 
-		location: 'Portland', 
-		postedDays: 2, 
-		type: 'Contract', 
-		experience: 'Mid', 
-		salaryMin: 85, 
-		salaryMax: 115, 
-		description: 'Build responsive user interfaces with modern frameworks.', 
-		skills: ['HTML', 'CSS', 'JavaScript'] 
-	},
-	{ 
-		id: 12, 
-		title: 'Machine Learning Engineer', 
-		company: 'AI Innovations', 
-		location: 'San Francisco', 
-		postedDays: 4, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 150, 
-		salaryMax: 190, 
-		description: 'Deploy machine learning models in production environments.', 
-		skills: ['TensorFlow', 'PyTorch', 'MLOps'] 
-	},
-	{ 
-		id: 13, 
-		title: 'Database Administrator', 
-		company: 'DataCorp', 
-		location: 'Phoenix', 
-		postedDays: 5, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 90, 
-		salaryMax: 120, 
-		description: 'Manage and optimize database performance and security.', 
-		skills: ['MySQL', 'PostgreSQL', 'Oracle'] 
-	},
-	{ 
-		id: 14, 
-		title: 'Software Architect', 
-		company: 'Enterprise Solutions', 
-		location: 'Dallas', 
-		postedDays: 1, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 140, 
-		salaryMax: 180, 
-		description: 'Design scalable software architecture for enterprise applications.', 
-		skills: ['System Design', 'Microservices', 'Cloud Architecture'] 
-	},
-	{ 
-		id: 15, 
-		title: 'Frontend Intern', 
-		company: 'Tech Startup', 
-		location: 'San Francisco', 
-		postedDays: 3, 
-		type: 'Internship', 
-		experience: 'Junior', 
-		salaryMin: 50, 
-		salaryMax: 70, 
-		description: 'Learn frontend development in a fast-paced startup environment.', 
-		skills: ['HTML', 'CSS', 'React'] 
-	},
-	{ 
-		id: 16, 
-		title: 'Systems Engineer', 
-		company: 'Infrastructure Co', 
-		location: 'Atlanta', 
-		postedDays: 6, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 100, 
-		salaryMax: 130, 
-		description: 'Maintain and optimize system infrastructure and networks.', 
-		skills: ['Linux', 'Networking', 'Scripting'] 
-	},
-	{ 
-		id: 17, 
-		title: 'Technical Writer', 
-		company: 'Documentation Inc', 
-		location: 'Remote', 
-		postedDays: 4, 
-		type: 'Contract', 
-		experience: 'Mid', 
-		salaryMin: 75, 
-		salaryMax: 100, 
-		description: 'Create technical documentation and user guides.', 
-		skills: ['Technical Writing', 'Markdown', 'API Documentation'] 
-	},
-	{ 
-		id: 18, 
-		title: 'Game Developer', 
-		company: 'Gaming Studio', 
-		location: 'Los Angeles', 
-		postedDays: 2, 
-		type: 'Full-time', 
-		experience: 'Mid', 
-		salaryMin: 95, 
-		salaryMax: 125, 
-		description: 'Develop engaging games for multiple platforms.', 
-		skills: ['Unity', 'C#', 'Game Design'] 
-	},
-	{ 
-		id: 19, 
-		title: 'Blockchain Developer', 
-		company: 'CryptoTech', 
-		location: 'New York', 
-		postedDays: 1, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 130, 
-		salaryMax: 170, 
-		description: 'Build decentralized applications and smart contracts.', 
-		skills: ['Solidity', 'Web3', 'Ethereum'] 
-	},
-	{ 
-		id: 20, 
-		title: 'Site Reliability Engineer', 
-		company: 'Scale Systems', 
-		location: 'Seattle', 
-		postedDays: 5, 
-		type: 'Full-time', 
-		experience: 'Senior', 
-		salaryMin: 125, 
-		salaryMax: 165, 
-		description: 'Ensure system reliability and performance at scale.', 
-		skills: ['Monitoring', 'Automation', 'Incident Response'] 
-	}
-]);
+// Initialize useJobs composable
+const { 
+	jobs: jobsFromDB, 
+	loading: jobsLoading, 
+	error: jobsError,
+	fetchJobs,
+	filterJobs,
+	getPaginatedJobs,
+	getTotalPages 
+} = useJobs();
 
 const filters = ref<Filters>({ 
 	keyword: '', 
@@ -391,42 +166,27 @@ const filters = ref<Filters>({
 const currentPage = ref(1);
 
 const filteredJobs = computed(() => {
-	return jobs.value.filter(job => {
-		const matchesKeyword = !filters.value.keyword || 
-			job.title.toLowerCase().includes(filters.value.keyword.toLowerCase());
-		
-		const matchesLocation = !filters.value.location || 
-			job.location.toLowerCase().includes(filters.value.location.toLowerCase());
-		
-		const matchesType = !filters.value.types.length || 
-			filters.value.types.includes(job.type);
-		
-		const matchesExperience = !filters.value.experience || 
-			job.experience === filters.value.experience;
-		
-		const matchesPosted = !filters.value.posted || 
-			job.postedDays <= Number(filters.value.posted);
-		
-		const matchesSkills = !filters.value.skills || 
-			filters.value.skills.split(',')
-				.map(s => s.trim().toLowerCase())
-				.every(s => job.skills.map(js => js.toLowerCase()).includes(s));
-		
-		const matchesSalary = job.salaryMax >= filters.value.salaryMin && 
-			job.salaryMin <= filters.value.salaryMax;
-		
-		return matchesKeyword && matchesLocation && matchesType && 
-			matchesExperience && matchesPosted && matchesSkills && matchesSalary;
-	});
+	if (!jobsFromDB.value.length) return [];
+	return filterJobs(filters.value);
 });
 
-const totalPages = computed(() => Math.ceil(filteredJobs.value.length / ITEMS_PER_PAGE));
+const totalPages = computed(() => getTotalPages(filteredJobs.value));
 
 const paginatedJobs = computed(() => {
-	const start = (currentPage.value - 1) * ITEMS_PER_PAGE;
-	const end = start + ITEMS_PER_PAGE;
-	return filteredJobs.value.slice(start, end);
+	return getPaginatedJobs(filteredJobs.value, currentPage.value);
 });
+
+// Load jobs on component mount
+async function loadJobs() {
+	try {
+		const result = await fetchJobs();
+		if (!result.success) {
+			console.error('Error loading jobs:', result.error);
+		}
+	} catch (error) {
+		console.error('Error loading jobs:', error);
+	}
+}
 
 function handleFiltersUpdate(newFilters: Filters) {
 	filters.value = newFilters;
@@ -476,6 +236,11 @@ function handleKeyDown(event: KeyboardEvent) {
 		(event.target as HTMLElement).click();
 	}
 }
+
+// Load jobs when component mounts
+onMounted(() => {
+	loadJobs();
+});
 
 // Cleanup scroll lock and event listeners when component unmounts
 onUnmounted(() => {
@@ -636,6 +401,91 @@ onUnmounted(() => {
 
 .no-jobs-btn {
 	min-width: 9rem;
+}
+
+.loading-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 1.5rem;
+	text-align: center;
+	background-color: white;
+	border-radius: 0.75rem;
+	border: 1px solid #e5e7eb;
+}
+
+.loading-spinner {
+	margin-bottom: 1rem;
+}
+
+.spinner-icon {
+	width: 2rem;
+	height: 2rem;
+	color: #3b82f6;
+	animation: spin 1s linear infinite;
+}
+
+.spinner-circle {
+	opacity: 0.25;
+}
+
+.spinner-path {
+	opacity: 0.75;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.loading-text {
+	color: #6b7280;
+	font-size: 0.875rem;
+	margin: 0;
+}
+
+.error-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 1.5rem;
+	text-align: center;
+	background-color: white;
+	border-radius: 0.75rem;
+	border: 1px solid #e5e7eb;
+}
+
+.error-icon {
+	margin-bottom: 1rem;
+}
+
+.error-icon-svg {
+	width: 2rem;
+	height: 2rem;
+	color: #ef4444;
+}
+
+.error-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0 0 0.5rem 0;
+}
+
+.error-message {
+	color: #6b7280;
+	font-size: 0.875rem;
+	margin: 0 0 1.5rem 0;
+}
+
+.error-retry-btn {
+	margin-top: 1rem;
 }
 
 @media (max-width: 640px) {
