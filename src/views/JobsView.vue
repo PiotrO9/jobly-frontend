@@ -38,11 +38,6 @@
 					<JobCard v-for="job in paginatedJobs" :key="job.id" :job="job" />
 					
 					<div v-if="filteredJobs.length === 0" class="no-jobs-placeholder">
-						<div class="no-jobs-icon">
-							<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M20 6H16V4C16 2.89 15.11 2 14 2H10C8.89 2 8 2.89 8 4V6H4C3.45 6 3 6.45 3 7S3.45 8 4 8H5V19C5 20.1 5.9 21 7 21H17C18.1 21 19 20.1 19 19V8H20C20.55 8 21 7.55 21 7S20.55 6 20 6ZM10 4H14V6H10V4Z" fill="#9CA3AF"/>
-							</svg>
-						</div>
 						<h3 class="no-jobs-title">No Jobs Found</h3>
 						<p class="no-jobs-description">
 							We couldn't find any jobs matching your search criteria.
@@ -762,6 +757,7 @@ onUnmounted(() => {
 
 	.no-jobs-placeholder {
 		padding: 3rem 1.5rem;
+		grid-column: 1/3;
 	}
 
 	.no-jobs-icon svg {
