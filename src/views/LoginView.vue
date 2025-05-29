@@ -200,11 +200,11 @@ function handleRegisterClick(): void {
 	align-items: center;
 	justify-content: center;
 	padding: 1rem;
-	background-color: #f8fafc;
+	background-color: var(--color-background-tertiary);
 }
 
 .login-card {
-	background: white;
+	background: var(--color-background);
 	border-radius: 12px;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	padding: 2rem;
@@ -235,16 +235,16 @@ function handleRegisterClick(): void {
 
 .api-errors {
 	padding: 1rem;
-	background-color: #fef2f2;
+	background-color: var(--color-error-bg);
 	border-radius: 6px;
-	border: 1px solid #fecaca;
+	border: 1px solid var(--color-error-border);
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
 }
 
 .api-error {
-	color: #dc2626;
+	color: var(--color-error);
 	font-size: 0.875rem;
 	font-weight: 500;
 }
@@ -263,11 +263,11 @@ function handleRegisterClick(): void {
 
 .form-input {
 	padding: 0.75rem 1rem;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-size: 1rem;
 	transition: all 0.2s ease;
-	background-color: white;
+	background-color: var(--color-background);
 }
 
 .form-input:focus {
@@ -277,11 +277,11 @@ function handleRegisterClick(): void {
 }
 
 .form-input--error {
-	border-color: #ef4444;
+	border-color: var(--color-error-light);
 }
 
 .form-input--error:focus {
-	border-color: #ef4444;
+	border-color: var(--color-error-light);
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
@@ -292,7 +292,7 @@ function handleRegisterClick(): void {
 }
 
 .form-error {
-	color: #ef4444;
+	color: var(--color-error-light);
 	font-size: 0.75rem;
 	font-weight: 500;
 }

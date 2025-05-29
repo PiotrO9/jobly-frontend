@@ -236,16 +236,16 @@ function handleKeyDown(event: KeyboardEvent) {
 .sidebar {
 	width: 25%;
 	padding: 20px;
-	background-color: #ffffff;
+	background-color: var(--color-background);
 	overflow-y: auto;
-	border-right: 1px solid #e5e7eb;
+	border-right: 1px solid var(--color-border);
 }
 
 .sidebar-title {
 	font-size: 20px;
 	font-weight: 600;
 	margin: 0 0 16px 0;
-	color: #111827;
+	color: var(--color-text-primary);
 }
 
 .filters {
@@ -263,7 +263,7 @@ function handleKeyDown(event: KeyboardEvent) {
 	display: block;
 	font-size: 14px;
 	font-weight: 500;
-	color: #374151;
+	color: var(--color-text-secondary);
 	margin-bottom: 8px;
 }
 
@@ -271,7 +271,7 @@ function handleKeyDown(event: KeyboardEvent) {
 .filter-select {
 	width: 100%;
 	padding: 8px 12px;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-size: 14px;
 	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -280,7 +280,7 @@ function handleKeyDown(event: KeyboardEvent) {
 .filter-input:focus,
 .filter-select:focus {
 	outline: none;
-	border-color: #3b82f6;
+	border-color: var(--color-info);
 	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -298,12 +298,12 @@ function handleKeyDown(event: KeyboardEvent) {
 
 .checkbox-input {
 	margin-right: 8px;
-	accent-color: #3b82f6;
+	accent-color: var(--color-info);
 }
 
 .checkbox-text {
 	font-size: 14px;
-	color: #374151;
+	color: var(--color-text-secondary);
 }
 
 .dual-range-container {
@@ -328,7 +328,7 @@ function handleKeyDown(event: KeyboardEvent) {
 	appearance: none;
 	width: 20px;
 	height: 20px;
-	background: #3b82f6;
+	background: var(--color-info);
 	border-radius: 50%;
 	cursor: pointer;
 	pointer-events: all;
@@ -339,7 +339,7 @@ function handleKeyDown(event: KeyboardEvent) {
 .filter-range::-moz-range-thumb {
 	width: 20px;
 	height: 20px;
-	background: #3b82f6;
+	background: var(--color-info);
 	border-radius: 50%;
 	cursor: pointer;
 	border: none;

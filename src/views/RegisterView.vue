@@ -308,11 +308,11 @@ function handleLoginClick(): void {
 	align-items: center;
 	justify-content: center;
 	padding: 1rem;
-	background-color: #f8fafc;
+	background-color: var(--color-background-tertiary);
 }
 
 .register-card {
-	background: white;
+	background: var(--color-background);
 	border-radius: 12px;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	padding: 2rem;
@@ -338,21 +338,21 @@ function handleLoginClick(): void {
 .success-message {
 	text-align: center;
 	padding: 2rem 1rem;
-	background-color: #f0fdf4;
+	background-color: var(--color-success-bg);
 	border-radius: 8px;
-	border: 1px solid #bbf7d0;
+	border: 1px solid var(--color-success-border);
 	margin-bottom: 2rem;
 }
 
 .success-title {
-	color: #16a34a;
+	color: var(--color-success);
 	font-size: 1.25rem;
 	font-weight: 600;
 	margin: 0 0 1rem 0;
 }
 
 .success-text {
-	color: #15803d;
+	color: var(--color-success-dark);
 	margin: 0;
 	line-height: 1.5;
 }
@@ -365,16 +365,16 @@ function handleLoginClick(): void {
 
 .api-errors {
 	padding: 1rem;
-	background-color: #fef2f2;
+	background-color: var(--color-error-bg);
 	border-radius: 6px;
-	border: 1px solid #fecaca;
+	border: 1px solid var(--color-error-border);
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
 }
 
 .api-error {
-	color: #dc2626;
+	color: var(--color-error);
 	font-size: 0.875rem;
 	font-weight: 500;
 }
@@ -393,11 +393,11 @@ function handleLoginClick(): void {
 
 .form-input {
 	padding: 0.75rem 1rem;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-size: 1rem;
 	transition: all 0.2s ease;
-	background-color: white;
+	background-color: var(--color-background);
 }
 
 .form-input:focus {
@@ -407,11 +407,11 @@ function handleLoginClick(): void {
 }
 
 .form-input--error {
-	border-color: #ef4444;
+	border-color: var(--color-error-light);
 }
 
 .form-input--error:focus {
-	border-color: #ef4444;
+	border-color: var(--color-error-light);
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
@@ -422,16 +422,16 @@ function handleLoginClick(): void {
 }
 
 .form-error {
-	color: #ef4444;
+	color: var(--color-error-light);
 	font-size: 0.75rem;
 	font-weight: 500;
 }
 
 .password-requirements {
 	padding: 1rem;
-	background-color: #f8fafc;
+	background-color: var(--color-background-tertiary);
 	border-radius: 6px;
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 }
 
 .password-requirements-title {
@@ -461,17 +461,17 @@ function handleLoginClick(): void {
 	content: '✗';
 	position: absolute;
 	left: 0;
-	color: #ef4444;
+	color: var(--color-error-light);
 	font-weight: 600;
 }
 
 .password-requirement--valid {
-	color: #16a34a;
+	color: var(--color-success);
 }
 
 .password-requirement--valid::before {
 	content: '✓';
-	color: #16a34a;
+	color: var(--color-success);
 }
 
 .register-footer {

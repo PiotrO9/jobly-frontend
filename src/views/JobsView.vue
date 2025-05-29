@@ -270,7 +270,7 @@ onUnmounted(() => {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	background-color: #f9fafb;
+	background-color: var(--color-background-secondary);
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -282,22 +282,22 @@ onUnmounted(() => {
 	left: 1rem;
 	z-index: 109;
 	padding: 0.5rem 1rem;
-	background-color: white;
-	border: 1px solid #d1d5db;
+	background-color: var(--color-background);
+	border: 1px solid var(--color-border-light);
 	border-radius: 0.5rem;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-	color: #374151;
+	color: var(--color-text-secondary);
 	cursor: pointer;
 	transition: background-color 0.2s;
 }
 
 .mobile-filter-toggle:hover {
-	background-color: #f9fafb;
+	background-color: var(--color-background-secondary);
 }
 
 .mobile-filter-toggle:focus {
 	outline: none;
-	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+	box-shadow: 0 0 0 2px var(--color-info), 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .mobile-filter-toggle.toggle-behind {
@@ -319,7 +319,7 @@ onUnmounted(() => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--color-overlay);
 	z-index: 111;
 }
 
@@ -377,9 +377,9 @@ onUnmounted(() => {
 	justify-content: center;
 	padding: 1.5rem;
 	text-align: center;
-	background-color: white;
+	background-color: var(--color-background);
 	border-radius: 0.75rem;
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 }
 
 .no-jobs-icon {
@@ -395,13 +395,13 @@ onUnmounted(() => {
 .no-jobs-title {
 	font-size: 1.125rem;
 	font-weight: 600;
-	color: #111827;
+	color: var(--color-text-primary);
 	margin: 0 0 0.5rem 0;
 }
 
 .no-jobs-description {
 	font-size: 0.875rem;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	margin: 0 0 0.5rem 0;
 	max-width: 28rem;
 	line-height: 1.5;
@@ -409,7 +409,7 @@ onUnmounted(() => {
 
 .no-jobs-suggestion {
 	font-size: 0.75rem;
-	color: #9ca3af;
+	color: var(--color-text-quaternary);
 	margin: 0 0 1.5rem 0;
 	max-width: 20rem;
 	line-height: 1.4;
@@ -426,9 +426,9 @@ onUnmounted(() => {
 	justify-content: center;
 	padding: 3rem 1.5rem;
 	text-align: center;
-	background-color: white;
+	background-color: var(--color-background);
 	border-radius: 0.75rem;
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 }
 
 .loading-spinner {
@@ -438,7 +438,7 @@ onUnmounted(() => {
 .spinner-icon {
 	width: 2rem;
 	height: 2rem;
-	color: #3b82f6;
+	color: var(--color-info);
 	animation: spin 1s linear infinite;
 }
 
@@ -460,7 +460,7 @@ onUnmounted(() => {
 }
 
 .loading-text {
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	font-size: 0.875rem;
 	margin: 0;
 }
@@ -472,9 +472,9 @@ onUnmounted(() => {
 	justify-content: center;
 	padding: 3rem 1.5rem;
 	text-align: center;
-	background-color: white;
+	background-color: var(--color-background);
 	border-radius: 0.75rem;
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 }
 
 .error-icon {
@@ -484,18 +484,18 @@ onUnmounted(() => {
 .error-icon-svg {
 	width: 2rem;
 	height: 2rem;
-	color: #ef4444;
+	color: var(--color-error-light);
 }
 
 .error-title {
 	font-size: 1.125rem;
 	font-weight: 600;
-	color: #111827;
+	color: var(--color-text-primary);
 	margin: 0 0 0.5rem 0;
 }
 
 .error-message {
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	font-size: 0.875rem;
 	margin: 0 0 1.5rem 0;
 }

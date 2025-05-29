@@ -363,14 +363,14 @@ async function handleSignOut() {
 <style scoped>
 .settings-container {
 	min-height: 100vh;
-	background-color: #f8fafc;
+	background-color: var(--color-background-tertiary);
 	padding: 2rem 1rem;
 }
 
 .settings-card {
 	max-width: 800px;
 	margin: 0 auto;
-	background: white;
+	background: var(--color-background);
 	border-radius: 12px;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	overflow: hidden;
@@ -378,7 +378,7 @@ async function handleSignOut() {
 
 .settings-header {
 	background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-	color: white;
+	color: var(--color-background);
 	padding: 2rem;
 	text-align: center;
 }
@@ -403,7 +403,7 @@ async function handleSignOut() {
 .loading-spinner {
 	width: 2rem;
 	height: 2rem;
-	border: 3px solid #e5e7eb;
+	border: 3px solid var(--color-border);
 	border-top: 3px solid var(--color-primary);
 	border-radius: 50%;
 	animation: spin 1s linear infinite;
@@ -427,15 +427,15 @@ async function handleSignOut() {
 }
 
 .message.success {
-	background-color: #f0fdf4;
-	color: #16a34a;
-	border: 1px solid #bbf7d0;
+	background-color: var(--color-success-bg);
+	color: var(--color-success);
+	border: 1px solid var(--color-success-border);
 }
 
 .message.error {
-	background-color: #fef2f2;
-	color: #dc2626;
-	border: 1px solid #fecaca;
+	background-color: var(--color-error-bg);
+	color: var(--color-error);
+	border: 1px solid var(--color-error-border);
 }
 
 .form-section {
@@ -448,7 +448,7 @@ async function handleSignOut() {
 	color: var(--text-color);
 	margin: 0 0 1.5rem 0;
 	padding-bottom: 0.5rem;
-	border-bottom: 2px solid #e5e7eb;
+	border-bottom: 2px solid var(--color-border);
 }
 
 .form-row {
@@ -478,11 +478,11 @@ async function handleSignOut() {
 .form-input,
 .form-textarea {
 	padding: 0.75rem 1rem;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-size: 1rem;
 	transition: all 0.2s ease;
-	background-color: white;
+	background-color: var(--color-background);
 }
 
 .form-input:focus,
@@ -493,8 +493,8 @@ async function handleSignOut() {
 }
 
 .form-input:disabled {
-	background-color: #f9fafb;
-	color: #6b7280;
+	background-color: var(--color-background-secondary);
+	color: var(--color-text-tertiary);
 	cursor: not-allowed;
 }
 
@@ -523,8 +523,8 @@ async function handleSignOut() {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	background-color: #e0f2fe;
-	color: #0369a1;
+	background-color: var(--color-info-bg-cyan);
+	color: var(--color-info-cyan);
 	padding: 0.5rem 0.75rem;
 	border-radius: 20px;
 	font-size: 0.875rem;
@@ -547,7 +547,7 @@ async function handleSignOut() {
 .checkbox-input {
 	width: 1.25rem;
 	height: 1.25rem;
-	border: 2px solid #d1d5db;
+	border: 2px solid var(--color-border-light);
 	border-radius: 4px;
 	cursor: pointer;
 }
@@ -563,7 +563,7 @@ async function handleSignOut() {
 	justify-content: flex-end;
 	margin-top: 2rem;
 	padding-top: 2rem;
-	border-top: 1px solid #e5e7eb;
+	border-top: 1px solid var(--color-border);
 }
 
 @media (max-width: 640px) {

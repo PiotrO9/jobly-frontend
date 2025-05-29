@@ -92,8 +92,8 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.filter-primary {
-	background-color: #3b82f6;
-	color: #ffffff;
+	background-color: var(--color-info);
+	color: var(--color-background);
 	border: none;
 	border-radius: 6px;
 	font-weight: 500;
@@ -101,7 +101,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.filter-primary:hover {
-	background-color: #2563eb;
+	background-color: var(--color-primary-dark);
 	translate: none;
 }
 
@@ -111,16 +111,16 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.filter-secondary {
-	background-color: #ffffff;
-	color: #374151;
-	border: 1px solid #d1d5db;
+	background-color: var(--color-background);
+	color: var(--color-text-secondary);
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-weight: 500;
 	font-size: 14px;
 }
 
 .button.filter-secondary:hover {
-	background-color: #f9fafb;
+	background-color: var(--color-background-secondary);
 	translate: none;
 }
 
@@ -130,16 +130,16 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.pagination {
-	background-color: #ffffff;
-	color: #374151;
-	border: 1px solid #d1d5db;
+	background-color: var(--color-background);
+	color: var(--color-text-secondary);
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	font-size: 14px;
 	font-weight: normal;
 }
 
 .button.pagination:hover {
-	background-color: #f9fafb;
+	background-color: var(--color-background-secondary);
 	translate: none;
 }
 
@@ -149,14 +149,14 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.pagination.active {
-	background-color: #3b82f6;
-	color: #ffffff;
-	border-color: #3b82f6;
+	background-color: var(--color-info);
+	color: var(--color-background);
+	border-color: var(--color-info);
 }
 
 .button.apply {
-	background-color: #2563eb;
-	color: #ffffff;
+	background-color: var(--color-primary-dark);
+	color: var(--color-background);
 	border: none;
 	border-radius: 6px;
 	font-size: 14px;
@@ -253,7 +253,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.submit:disabled {
-	background-color: #9ca3af;
+	background-color: var(--color-text-quaternary);
 	cursor: not-allowed;
 }
 
@@ -285,16 +285,15 @@ withDefaults(defineProps<Props>(), {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	background-color: #f9fafb;
-	color: #374151;
-	border: 1px solid #d1d5db;
+	background-color: var(--color-background-secondary);
+	color: var(--color-text-secondary);
+	border: 1px solid var(--color-border);
 	border-radius: 6px;
-	font-size: 14px;
-	font-weight: 500;
 	cursor: pointer;
 	transition: all 0.2s ease;
 	padding: 0;
-	margin-bottom: 1.5rem;
+	font-size: 14px;
+	font-weight: 500;
 }
 
 .button.back-button .text {
@@ -306,9 +305,9 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.back-button:hover {
-	background-color: #3b82f6;
-	color: #ffffff;
-	border-color: #3b82f6;
+	background-color: var(--color-info);
+	color: var(--color-background);
+	border-color: var(--color-info);
 	translate: none;
 }
 
@@ -322,8 +321,8 @@ withDefaults(defineProps<Props>(), {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
-	background-color: #f9fafb;
-	border: 1px solid #e5e7eb;
+	background-color: var(--color-background-secondary);
+	border: 1px solid var(--color-border);
 	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.2s ease;
@@ -340,8 +339,8 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.user-menu-button:hover {
-	background-color: #f3f4f6;
-	border-color: #d1d5db;
+	background-color: var(--color-background-light);
+	border-color: var(--color-border-light);
 	translate: none;
 }
 
@@ -379,8 +378,8 @@ withDefaults(defineProps<Props>(), {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	background-color: #3b82f6;
-	color: white;
+	background-color: var(--color-info);
+	color: var(--color-background);
 	border: none;
 	border-radius: 0.5rem;
 	font-size: 0.875rem;
@@ -399,7 +398,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.mobile-filter-toggle:hover {
-	background-color: #2563eb;
+	background-color: var(--color-primary-dark);
 	translate: none;
 }
 
@@ -409,11 +408,11 @@ withDefaults(defineProps<Props>(), {
 
 /* Details Button */
 .button.details {
-	background-color: #f9fafb;
-	color: #374151;
+	background-color: var(--color-background-secondary);
+	color: var(--color-text-secondary);
 	font-size: 14px;
 	font-weight: 500;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--color-border-light);
 	border-radius: 6px;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
@@ -426,9 +425,9 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.details:hover {
-	background-color: #2563eb;
-	color: #ffffff;
-	border-color: #2563eb;
+	background-color: var(--color-primary-dark);
+	color: var(--color-background);
+	border-color: var(--color-primary-dark);
 	translate: none;
 }
 
@@ -464,7 +463,7 @@ withDefaults(defineProps<Props>(), {
 .button.remove-skill {
 	background: none;
 	border: none;
-	color: #0369a1;
+	color: var(--color-info-cyan);
 	cursor: pointer;
 	font-size: 1.25rem;
 	line-height: 1;
@@ -517,14 +516,14 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.save:disabled {
-	background-color: #9ca3af;
+	background-color: var(--color-text-quaternary);
 	cursor: not-allowed;
 }
 
 /* Logout Button */
 .button.logout {
-	background-color: #dc2626;
-	color: white;
+	background-color: var(--color-error);
+	color: var(--color-background);
 	border: none;
 	border-radius: 6px;
 	font-size: 16px;
@@ -540,7 +539,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .button.logout:hover {
-	background-color: #b91c1c;
+	background-color: var(--color-error-dark);
 	translate: none;
 }
 </style>

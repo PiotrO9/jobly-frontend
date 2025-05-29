@@ -271,7 +271,7 @@ onMounted(() => {
 <style scoped>
 .job-details {
 	min-height: 100vh;
-	background-color: #f9fafb;
+	background-color: var(--color-background-secondary);
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -282,15 +282,15 @@ onMounted(() => {
 }
 
 .job-card {
-	background-color: white;
+	background-color: var(--color-background);
 	border-radius: 1rem;
 	padding: 2rem;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 }
 
 .job-header {
-	border-bottom: 1px solid #e5e7eb;
+	border-bottom: 1px solid var(--color-border);
 	padding-bottom: 1.5rem;
 	margin-bottom: 2rem;
 }
@@ -302,7 +302,7 @@ onMounted(() => {
 .job-title {
 	font-size: 1.875rem;
 	font-weight: 700;
-	color: #111827;
+	color: var(--color-text-primary);
 	margin: 0 0 0.5rem 0;
 	line-height: 1.2;
 }
@@ -316,14 +316,14 @@ onMounted(() => {
 .company-name {
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: #374151;
+	color: var(--color-text-secondary);
 	margin: 0;
 }
 
 .location-info {
 	display: flex;
 	align-items: center;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	font-size: 0.875rem;
 }
 
@@ -348,7 +348,7 @@ onMounted(() => {
 .salary-label {
 	font-size: 0.75rem;
 	font-weight: 500;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 }
@@ -356,7 +356,7 @@ onMounted(() => {
 .salary-value {
 	font-size: 1.125rem;
 	font-weight: 600;
-	color: #059669;
+	color: var(--color-success-emerald);
 }
 
 .job-tags {
@@ -374,18 +374,18 @@ onMounted(() => {
 }
 
 .type-tag {
-	background-color: #dbeafe;
-	color: #1e40af;
+	background-color: var(--color-info-bg-light);
+	color: var(--color-info-dark);
 }
 
 .experience-tag {
-	background-color: #f3e8ff;
-	color: #7c3aed;
+	background-color: var(--color-purple-bg);
+	color: var(--color-purple);
 }
 
 .posted-tag {
-	background-color: #f0f9ff;
-	color: #0369a1;
+	background-color: var(--color-info-bg-sky);
+	color: var(--color-info-cyan);
 }
 
 .job-content {
@@ -403,20 +403,20 @@ onMounted(() => {
 .section-title {
 	font-size: 1.125rem;
 	font-weight: 600;
-	color: #111827;
+	color: var(--color-text-primary);
 	margin: 0;
 }
 
 .job-description,
 .job-description-extended {
 	font-size: 0.875rem;
-	color: #374151;
+	color: var(--color-text-secondary);
 	line-height: 1.6;
 	margin: 0;
 }
 
 .job-description-extended {
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 }
 
 .skills-container {
@@ -427,12 +427,12 @@ onMounted(() => {
 
 .skill-tag {
 	padding: 0.5rem 1rem;
-	background-color: #f9fafb;
-	border: 1px solid #e5e7eb;
+	background-color: var(--color-background-secondary);
+	border: 1px solid var(--color-border);
 	border-radius: 0.5rem;
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: #374151;
+	color: var(--color-text-secondary);
 }
 
 .requirements-list,
@@ -449,7 +449,7 @@ onMounted(() => {
 	position: relative;
 	padding-left: 1.5rem;
 	font-size: 0.875rem;
-	color: #374151;
+	color: var(--color-text-secondary);
 	line-height: 1.5;
 }
 
@@ -457,7 +457,7 @@ onMounted(() => {
 	content: '•';
 	position: absolute;
 	left: 0;
-	color: #3b82f6;
+	color: var(--color-info);
 	font-weight: bold;
 }
 
@@ -466,14 +466,14 @@ onMounted(() => {
 	align-items: flex-start;
 	gap: 0.75rem;
 	font-size: 0.875rem;
-	color: #374151;
+	color: var(--color-text-secondary);
 	line-height: 1.5;
 }
 
 .benefit-icon {
 	width: 1.25rem;
 	height: 1.25rem;
-	color: #059669;
+	color: var(--color-success-emerald);
 	flex-shrink: 0;
 	margin-top: 0.125rem;
 }
@@ -508,7 +508,7 @@ onMounted(() => {
 .spinning-icon {
 	width: 3rem;
 	height: 3rem;
-	color: #3b82f6;
+	color: var(--color-info);
 	animation: spin-animation 1s linear infinite;
 }
 
@@ -531,7 +531,7 @@ onMounted(() => {
 
 .loading-text {
 	font-size: 1.125rem;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	margin: 0;
 }
 
@@ -552,19 +552,19 @@ onMounted(() => {
 .error-icon svg {
 	width: 4rem;
 	height: 4rem;
-	color: #dc2626;
+	color: var(--color-error);
 }
 
 .error-title {
 	font-size: 1.5rem;
 	font-weight: 600;
-	color: #111827;
+	color: var(--color-text-primary);
 	margin: 0 0 0.5rem 0;
 }
 
 .error-message {
 	font-size: 1rem;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	margin: 0 0 2rem 0;
 	max-width: 28rem;
 }
@@ -595,7 +595,7 @@ onMounted(() => {
 	.company-name::after {
 		content: '•';
 		margin: 0 0.75rem;
-		color: #d1d5db;
+		color: var(--color-text-disabled);
 	}
 
 	.job-meta {

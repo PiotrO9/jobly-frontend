@@ -17,7 +17,7 @@ import Button from '@/components/ui/Button.vue'
 
 <style scoped>
 .home-layout {
-	background-color: #f2f5ff;
+	background-color: var(--color-info-bg);
 	width: 100%;
 	height: 100%;
 	display: flex;

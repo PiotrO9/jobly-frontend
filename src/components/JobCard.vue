@@ -75,9 +75,9 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 
 <style scoped>
 .job-card {
-	background: #ffffff;
+	background: var(--color-background);
 	padding: 16px;
-	border: 1px solid #e5e7eb;
+	border: 1px solid var(--color-border);
 	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
@@ -105,7 +105,7 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 	display: inline-block;
 	font-size: 18px;
 	font-weight: 600;
-	color: #2563eb;
+	color: var(--color-primary-dark);
 	margin: 0 0 4px 0;
 	font-family: 'Roboto', sans-serif;
 	cursor: pointer;
@@ -130,7 +130,7 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 
 .job-company {
 	font-size: 14px;
-	color: #6b7280;
+	color: var(--color-text-tertiary);
 	margin: 0;
 	font-family: 'Roboto', sans-serif;
 }
@@ -142,20 +142,20 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 .job-salary {
 	font-size: 14px;
 	font-weight: 500;
-	color: #059669;
+	color: var(--color-success-emerald);
 	font-family: 'Roboto', sans-serif;
 }
 
 .job-posted {
 	font-size: 12px;
-	color: #9ca3af;
+	color: var(--color-text-quaternary);
 	margin: 4px 0 0 0;
 	font-family: 'Roboto', sans-serif;
 }
 
 .job-description {
 	font-size: 14px;
-	color: #374151;
+	color: var(--color-text-secondary);
 	margin: 0 0 16px 0;
 	flex: 1;
 	line-height: 1.5;
@@ -183,18 +183,18 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 }
 
 .tag-type {
-	background-color: #dbeafe;
-	color: #1e40af;
+	background-color: var(--color-info-bg-light);
+	color: var(--color-info-dark);
 }
 
 .tag-experience {
-	background-color: #ede9fe;
-	color: #7c3aed;
+	background-color: var(--color-purple-bg);
+	color: var(--color-purple);
 }
 
 .tag-skill {
-	background-color: #f3f4f6;
-	color: #374151;
+	background-color: var(--color-background-light);
+	color: var(--color-text-secondary);
 }
 </style>
 

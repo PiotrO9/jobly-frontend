@@ -1,12 +1,59 @@
 :root {
+	/* Primary colors */
 	--color-primary: #0060fb;
 	--color-primary-hover: #034fcb;
+	--color-primary-light: #3b82f6;
+	--color-primary-dark: #2563eb;
 
-	--color-background: #fff;
-
-	/* --gray-300: ; */
+	/* Background colors */
+	--color-background: #ffffff;
+	--color-background-secondary: #f9fafb;
+	--color-background-tertiary: #f8fafc;
+	--color-background-light: #f3f4f6;
+	
+	/* Success colors */
+	--color-success-bg: #f0fdf4;
+	--color-success: #16a34a;
+	--color-success-dark: #15803d;
+	--color-success-border: #bbf7d0;
+	--color-success-emerald: #059669;
+	
+	/* Error colors */
+	--color-error-bg: #fef2f2;
+	--color-error: #dc2626;
+	--color-error-light: #ef4444;
+	--color-error-border: #fecaca;
+	--color-error-dark: #b91c1c;
+	
+	/* Info colors */
+	--color-info-bg: #f2f5ff;
+	--color-info-bg-light: #dbeafe;
+	--color-info-bg-cyan: #e0f2fe;
+	--color-info-bg-sky: #f0f9ff;
+	--color-info: #3b82f6;
+	--color-info-dark: #1e40af;
+	--color-info-cyan: #0369a1;
+	
+	/* Purple colors */
+	--color-purple-bg: #f3e8ff;
+	--color-purple: #7c3aed;
+	
+	/* Text colors */
+	--color-text-primary: #111827;
+	--color-text-secondary: #374151;
+	--color-text-tertiary: #6b7280;
+	--color-text-quaternary: #9ca3af;
+	--color-text-disabled: #d1d5db;
+	
+	/* Border colors */
+	--color-border: #e5e7eb;
+	--color-border-light: #d1d5db;
+	
+	/* Legacy variables for backward compatibility */
 	--gray-600: #686781;
 	--gray-700: #171728;
-
 	--text-color: var(--gray-700);
+	
+	/* Overlay */
+	--color-overlay: rgba(0, 0, 0, 0.5);
 }
