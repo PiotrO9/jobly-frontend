@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import Button from '@/components/ui/Button.vue'
 import MenuItem from '@/components/ui/MenuItem.vue'
 
+const router = useRouter()
+const authStore = useAuthStore()
+
 const isMobileMenuOpen = ref(false)
+const isUserMenuOpen = ref(false)
 
 // Watch for mobile menu changes to control body scroll
 watch(isMobileMenuOpen, (isOpen) => {
@@ -19,11 +25,14 @@ function handleEscapeKey(event: KeyboardEvent) {
 	if (event.key === 'Escape' && isMobileMenuOpen.value) {
 		isMobileMenuOpen.value = false
 	}
+	if (event.key === 'Escape' && isUserMenuOpen.value) {
+		isUserMenuOpen.value = false
+	}
 }
 
 // Add/remove escape key listener
-watch(isMobileMenuOpen, (isOpen) => {
-	if (isOpen) {
+watch([isMobileMenuOpen, isUserMenuOpen], ([mobileOpen, userMenuOpen]) => {
+	if (mobileOpen || userMenuOpen) {
 		document.addEventListener('keydown', handleEscapeKey)
 	} else {
 		document.removeEventListener('keydown', handleEscapeKey)
@@ -32,10 +41,19 @@ watch(isMobileMenuOpen, (isOpen) => {
 
 function handleToggleMobileMenu() {
 	isMobileMenuOpen.value = !isMobileMenuOpen.value
+	isUserMenuOpen.value = false
 }
 
 function handleCloseMobileMenu() {
 	isMobileMenuOpen.value = false
+}
+
+function handleToggleUserMenu() {
+	isUserMenuOpen.value = !isUserMenuOpen.value
+}
+
+function handleCloseUserMenu() {
+	isUserMenuOpen.value = false
 }
 
 function handleKeyDown(event: KeyboardEvent) {
@@ -45,10 +63,47 @@ function handleKeyDown(event: KeyboardEvent) {
 	}
 }
 
+function handleNavigateToSettings() {
+	router.push('/account/settings')
+	handleCloseUserMenu()
+	handleCloseMobileMenu()
+}
+
+async function handleSignOut() {
+	try {
+		await authStore.signOut()
+		router.push('/')
+		handleCloseUserMenu()
+		handleCloseMobileMenu()
+	} catch (error) {
+		console.error('Logout failed:', error)
+	}
+}
+
+// Close user menu when clicking outside
+function handleClickOutside(event: Event) {
+	const target = event.target as HTMLElement
+	const userMenu = document.querySelector('.user-menu')
+	const userButton = document.querySelector('.user-menu-button')
+	
+	if (userMenu && !userMenu.contains(target) && !userButton?.contains(target)) {
+		isUserMenuOpen.value = false
+	}
+}
+
+watch(isUserMenuOpen, (isOpen) => {
+	if (isOpen) {
+		document.addEventListener('click', handleClickOutside)
+	} else {
+		document.removeEventListener('click', handleClickOutside)
+	}
+})
+
 // Cleanup scroll lock and event listeners when component unmounts
 onUnmounted(() => {
 	document.body.classList.remove('scroll-locked')
 	document.removeEventListener('keydown', handleEscapeKey)
+	document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -56,23 +111,23 @@ onUnmounted(() => {
 	<header class="header">
 		<div class="header-wrapper container">
 			<div class="logo-wrapper">
-				<span class="logo-text">
+				<router-link to="/" class="logo-text">
 					Job board
-				</span>
+				</router-link>
 			</div>
 
 			<!-- Desktop Navigation -->
 			<nav class="desktop-nav">
 				<ul class="menu-list">
 					<li class="menu-item">
-						<a href="/" class="menu-link">
+						<router-link to="/" class="menu-link">
 							Home
-						</a>
+						</router-link>
 					</li>
 					<li class="menu-item">
-						<a href="/" class="menu-link">
-							About
-						</a>
+						<router-link to="/jobs" class="menu-link">
+							Jobs
+						</router-link>
 					</li>
 					<MenuItem label="Find a job" link="/find-a-job" hasArrow>
 						<template #content>
@@ -84,9 +139,60 @@ onUnmounted(() => {
 				</ul>
 			</nav>
 
-			<!-- Desktop Login Button -->
+			<!-- Desktop Actions -->
 			<div class="desktop-actions">
-				<Button variant="primary" text="Login" />
+				<!-- Not authenticated -->
+				<div v-if="!authStore.isAuthenticated" class="auth-buttons">
+					<Button variant="secondary" text="Login" link="/login" />
+					<Button variant="primary" text="Sign Up" link="/register" />
+				</div>
+				
+				<!-- Authenticated -->
+				<div v-else class="user-menu-wrapper">
+					<button 
+						class="user-menu-button"
+						@click="handleToggleUserMenu"
+						@keydown="handleKeyDown"
+						tabindex="0"
+						aria-label="User menu"
+						:aria-expanded="isUserMenuOpen"
+					>
+						<div class="user-avatar">
+							{{ authStore.userEmail?.charAt(0).toUpperCase() }}
+						</div>
+						<span class="user-email">{{ authStore.userEmail }}</span>
+						<svg class="chevron-icon" :class="{ 'rotated': isUserMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<polyline points="6,9 12,15 18,9"></polyline>
+						</svg>
+					</button>
+					
+					<!-- User Dropdown Menu -->
+					<div v-if="isUserMenuOpen" class="user-menu">
+						<div class="user-menu-header">
+							<div class="user-info">
+								<div class="user-name">{{ authStore.userEmail }}</div>
+							</div>
+						</div>
+						<div class="user-menu-divider"></div>
+						<div class="user-menu-items">
+							<button class="user-menu-item" @click="handleNavigateToSettings">
+								<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<circle cx="12" cy="12" r="3"></circle>
+									<path d="M12 1v6m0 12v6m11-7h-6m-12 0H1m15.5-6.5l-4.24 4.24M7.76 7.76L3.52 3.52m12.96 0l-4.24 4.24M7.76 16.24l-4.24 4.24"></path>
+								</svg>
+								Ustawienia konta
+							</button>
+							<button class="user-menu-item logout" @click="handleSignOut">
+								<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+									<polyline points="16,17 21,12 16,7"></polyline>
+									<line x1="21" y1="12" x2="9" y2="12"></line>
+								</svg>
+								Wyloguj się
+							</button>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<!-- Mobile Menu Toggle -->
@@ -115,23 +221,54 @@ onUnmounted(() => {
 		<nav class="mobile-nav" :class="{ 'mobile-nav-open': isMobileMenuOpen }">
 			<ul class="mobile-menu-list">
 				<li class="mobile-menu-item">
-					<a href="/" class="mobile-menu-link" @click="handleCloseMobileMenu">
+					<router-link to="/" class="mobile-menu-link" @click="handleCloseMobileMenu">
 						Home
-					</a>
+					</router-link>
 				</li>
 				<li class="mobile-menu-item">
-					<a href="/" class="mobile-menu-link" @click="handleCloseMobileMenu">
-						About
-					</a>
+					<router-link to="/jobs" class="mobile-menu-link" @click="handleCloseMobileMenu">
+						Jobs
+					</router-link>
 				</li>
 				<li class="mobile-menu-item">
-					<a href="/find-a-job" class="mobile-menu-link" @click="handleCloseMobileMenu">
+					<router-link to="/find-a-job" class="mobile-menu-link" @click="handleCloseMobileMenu">
 						Find a job
-					</a>
+					</router-link>
 				</li>
-				<li class="mobile-menu-item mobile-login">
-					<Button variant="primary" text="Login" @click="handleCloseMobileMenu" />
-				</li>
+				
+				<!-- Mobile Auth Section -->
+				<div v-if="!authStore.isAuthenticated" class="mobile-auth">
+					<li class="mobile-menu-item">
+						<router-link to="/login" class="mobile-menu-link" @click="handleCloseMobileMenu">
+							Login
+						</router-link>
+					</li>
+					<li class="mobile-menu-item mobile-signup">
+						<Button variant="primary" text="Sign Up" link="/register" @click="handleCloseMobileMenu" />
+					</li>
+				</div>
+				
+				<!-- Mobile User Menu -->
+				<div v-else class="mobile-user-section">
+					<li class="mobile-menu-item mobile-user-info">
+						<div class="mobile-user-avatar">
+							{{ authStore.userEmail?.charAt(0).toUpperCase() }}
+						</div>
+						<div class="mobile-user-details">
+							<div class="mobile-user-email">{{ authStore.userEmail }}</div>
+						</div>
+					</li>
+					<li class="mobile-menu-item">
+						<button class="mobile-menu-link" @click="handleNavigateToSettings">
+							Ustawienia konta
+						</button>
+					</li>
+					<li class="mobile-menu-item">
+						<button class="mobile-menu-link logout" @click="handleSignOut">
+							Wyloguj się
+						</button>
+					</li>
+				</div>
 			</ul>
 		</nav>
 	</header>
@@ -435,6 +572,215 @@ onUnmounted(() => {
 	.menu-link,
 	.mobile-menu-link {
 		transition: all 0.2s ease;
+	}
+}
+
+/* Auth Buttons */
+.auth-buttons {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+/* User Menu Styles */
+.user-menu-wrapper {
+	position: relative;
+}
+
+.user-menu-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	background: white;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-size: 0.875rem;
+}
+
+.user-menu-button:hover {
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 3px rgba(0, 96, 251, 0.1);
+}
+
+.user-avatar {
+	width: 2rem;
+	height: 2rem;
+	background-color: var(--color-primary);
+	color: white;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 0.875rem;
+}
+
+.user-email {
+	max-width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--text-color);
+	font-weight: 500;
+}
+
+.chevron-icon {
+	transition: transform 0.2s ease;
+	color: #6b7280;
+}
+
+.chevron-icon.rotated {
+	transform: rotate(180deg);
+}
+
+.user-menu {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	right: 0;
+	background: white;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+	width: 280px;
+	z-index: 50;
+}
+
+.user-menu-header {
+	padding: 1rem;
+}
+
+.user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.user-name {
+	font-weight: 600;
+	color: var(--text-color);
+	font-size: 0.875rem;
+}
+
+.user-status {
+	font-size: 0.75rem;
+	color: var(--gray-600);
+}
+
+.user-menu-divider {
+	height: 1px;
+	background-color: #e5e7eb;
+}
+
+.user-menu-items {
+	padding: 0.5rem 0;
+}
+
+.user-menu-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	background: none;
+	border: none;
+	text-align: left;
+	font-size: 0.875rem;
+	color: var(--text-color);
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.user-menu-item:hover {
+	background-color: #f9fafb;
+}
+
+.user-menu-item.logout {
+	color: #dc2626;
+}
+
+.user-menu-item.logout:hover {
+	background-color: #fef2f2;
+}
+
+.menu-icon {
+	flex-shrink: 0;
+	color: var(--gray-600);
+}
+
+.user-menu-item.logout .menu-icon {
+	color: #dc2626;
+}
+
+/* Mobile User Styles */
+.mobile-auth {
+	border-top: 1px solid #f3f4f6;
+	margin-top: 1rem;
+	padding-top: 1rem;
+}
+
+.mobile-signup {
+	padding: 1.5rem;
+	border-bottom: none;
+}
+
+.mobile-user-section {
+	border-top: 1px solid #f3f4f6;
+	margin-top: 1rem;
+	padding-top: 1rem;
+}
+
+.mobile-user-info {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem 1.5rem;
+	border-bottom: 1px solid #f3f4f6;
+}
+
+.mobile-user-avatar {
+	width: 2.5rem;
+	height: 2.5rem;
+	background-color: var(--color-primary);
+	color: white;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.mobile-user-details {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.mobile-user-email {
+	font-weight: 600;
+	color: var(--text-color);
+	font-size: 0.875rem;
+}
+
+.mobile-user-status {
+	font-size: 0.75rem;
+	color: var(--gray-600);
+}
+
+.mobile-menu-link.logout {
+	color: #dc2626;
+}
+
+@media (max-width: 640px) {
+	.user-email {
+		display: none;
+	}
+	
+	.user-menu {
+		width: 260px;
 	}
 }
 </style>
