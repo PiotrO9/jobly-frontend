@@ -178,9 +178,10 @@ onUnmounted(() => {
 							<button class="user-menu-item" @click="handleNavigateToSettings">
 								<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 									<circle cx="12" cy="12" r="3"></circle>
-									<path d="M12 1v6m0 12v6m11-7h-6m-12 0H1m15.5-6.5l-4.24 4.24M7.76 7.76L3.52 3.52m12.96 0l-4.24 4.24M7.76 16.24l-4.24 4.24"></path>
+									<path d="m12 1 1.27 2.76 2.76 1.27-2.76 1.27L12 9l-1.27-2.76-2.76-1.27 2.76-1.27L12 1"></path>
+									<path d="m19 12 1.27 2.76 2.76 1.27-2.76 1.27L19 21l-1.27-2.76-2.76-1.27 2.76-1.27L19 12"></path>
 								</svg>
-								Ustawienia konta
+								Account Settings
 							</button>
 							<button class="user-menu-item logout" @click="handleSignOut">
 								<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -188,7 +189,7 @@ onUnmounted(() => {
 									<polyline points="16,17 21,12 16,7"></polyline>
 									<line x1="21" y1="12" x2="9" y2="12"></line>
 								</svg>
-								Wyloguj się
+								Sign Out
 							</button>
 						</div>
 					</div>
@@ -260,12 +261,12 @@ onUnmounted(() => {
 					</li>
 					<li class="mobile-menu-item">
 						<button class="mobile-menu-link" @click="handleNavigateToSettings">
-							Ustawienia konta
+							Account Settings
 						</button>
 					</li>
 					<li class="mobile-menu-item">
 						<button class="mobile-menu-link logout" @click="handleSignOut">
-							Wyloguj się
+							Sign Out
 						</button>
 					</li>
 				</div>

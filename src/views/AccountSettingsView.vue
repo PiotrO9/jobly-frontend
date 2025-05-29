@@ -45,7 +45,7 @@ const successMessage = ref('')
 const errorMessage = ref('')
 const newSkill = ref('')
 
-// Sprawdź czy użytkownik jest zalogowany
+// Check if user is authenticated
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 onMounted(async () => {
@@ -68,7 +68,7 @@ async function loadUserProfile() {
 		})
 		
 		if (error) {
-			errorMessage.value = 'Nie udało się załadować profilu użytkownika'
+			errorMessage.value = 'Failed to load user profile'
 			return
 		}
 		
@@ -78,7 +78,7 @@ async function loadUserProfile() {
 		}
 	} catch (error) {
 		console.error('Error loading user profile:', error)
-		errorMessage.value = 'Wystąpił błąd podczas ładowania profilu'
+		errorMessage.value = 'An error occurred while loading profile'
 	} finally {
 		isLoading.value = false
 	}
@@ -95,19 +95,19 @@ async function handleSaveProfile() {
 		const { error } = await update('user_profiles', profile, { id: authStore.userId })
 		
 		if (error) {
-			errorMessage.value = 'Nie udało się zapisać zmian'
+			errorMessage.value = 'Failed to save changes'
 			return
 		}
 		
-		successMessage.value = 'Profil został zaktualizowany!'
+		successMessage.value = 'Profile updated successfully!'
 		
-		// Ukryj komunikat po 3 sekundach
+		// Hide message after 3 seconds
 		setTimeout(() => {
 			successMessage.value = ''
 		}, 3000)
 	} catch (error) {
 		console.error('Error saving profile:', error)
-		errorMessage.value = 'Wystąpił błąd podczas zapisywania'
+		errorMessage.value = 'An error occurred while saving'
 	} finally {
 		isSaving.value = false
 	}
@@ -141,14 +141,14 @@ async function handleSignOut() {
 	<div class="settings-container">
 		<div class="settings-card">
 			<div class="settings-header">
-				<h1 class="settings-title">Ustawienia konta</h1>
-				<p class="settings-subtitle">Zarządzaj swoim profilem i preferencjami</p>
+				<h1 class="settings-title">Account Settings</h1>
+				<p class="settings-subtitle">Manage your profile and preferences</p>
 			</div>
 			
 			<!-- Loading State -->
 			<div v-if="isLoading" class="loading-state">
 				<div class="loading-spinner"></div>
-				<p>Ładowanie profilu...</p>
+				<p>Loading profile...</p>
 			</div>
 			
 			<!-- Settings Form -->
@@ -163,7 +163,7 @@ async function handleSignOut() {
 				
 				<!-- User Info Section -->
 				<section class="form-section">
-					<h2 class="section-title">Informacje podstawowe</h2>
+					<h2 class="section-title">Basic Information</h2>
 					
 					<div class="form-row">
 						<div class="form-group">
@@ -176,52 +176,52 @@ async function handleSignOut() {
 								readonly
 								disabled
 							/>
-							<small class="form-hint">Adres email nie może być zmieniony</small>
+							<small class="form-hint">Email address cannot be changed</small>
 						</div>
 					</div>
 					
 					<div class="form-row">
 						<div class="form-group">
-							<label for="first_name" class="form-label">Imię</label>
+							<label for="first_name" class="form-label">First Name</label>
 							<input
 								id="first_name"
 								v-model="profile.first_name"
 								type="text"
 								class="form-input"
-								placeholder="Twoje imię"
+								placeholder="Your first name"
 							/>
 						</div>
 						<div class="form-group">
-							<label for="last_name" class="form-label">Nazwisko</label>
+							<label for="last_name" class="form-label">Last Name</label>
 							<input
 								id="last_name"
 								v-model="profile.last_name"
 								type="text"
 								class="form-input"
-								placeholder="Twoje nazwisko"
+								placeholder="Your last name"
 							/>
 						</div>
 					</div>
 					
 					<div class="form-row">
 						<div class="form-group">
-							<label for="username" class="form-label">Nazwa użytkownika</label>
+							<label for="username" class="form-label">Username</label>
 							<input
 								id="username"
 								v-model="profile.username"
 								type="text"
 								class="form-input"
-								placeholder="nazwa_uzytkownika"
+								placeholder="username"
 							/>
 						</div>
 						<div class="form-group">
-							<label for="location" class="form-label">Lokalizacja</label>
+							<label for="location" class="form-label">Location</label>
 							<input
 								id="location"
 								v-model="profile.location"
 								type="text"
 								class="form-input"
-								placeholder="Warszawa, Polska"
+								placeholder="Warsaw, Poland"
 							/>
 						</div>
 					</div>
@@ -229,14 +229,14 @@ async function handleSignOut() {
 				
 				<!-- Bio Section -->
 				<section class="form-section">
-					<h2 class="section-title">O mnie</h2>
+					<h2 class="section-title">About Me</h2>
 					<div class="form-group">
-						<label for="bio" class="form-label">Biografia</label>
+						<label for="bio" class="form-label">Bio</label>
 						<textarea
 							id="bio"
 							v-model="profile.bio"
 							class="form-textarea"
-							placeholder="Opowiedz coś o sobie..."
+							placeholder="Tell us about yourself..."
 							rows="4"
 						></textarea>
 					</div>
@@ -244,10 +244,10 @@ async function handleSignOut() {
 				
 				<!-- Experience Section -->
 				<section class="form-section">
-					<h2 class="section-title">Doświadczenie</h2>
+					<h2 class="section-title">Experience</h2>
 					<div class="form-row">
 						<div class="form-group">
-							<label for="experience_years" class="form-label">Lata doświadczenia</label>
+							<label for="experience_years" class="form-label">Years of Experience</label>
 							<input
 								id="experience_years"
 								v-model.number="profile.experience_years"
@@ -263,17 +263,17 @@ async function handleSignOut() {
 				
 				<!-- Skills Section -->
 				<section class="form-section">
-					<h2 class="section-title">Umiejętności</h2>
+					<h2 class="section-title">Skills</h2>
 					<div class="skills-input-group">
 						<input
 							v-model="newSkill"
 							type="text"
 							class="form-input"
-							placeholder="Dodaj umiejętność (np. JavaScript)"
+							placeholder="Add skill (e.g. JavaScript)"
 							@keyup.enter="handleAddSkill"
 						/>
 						<button type="button" class="add-skill-btn" @click="handleAddSkill">
-							Dodaj
+							Add
 						</button>
 					</div>
 					<div v-if="profile.skills && profile.skills.length > 0" class="skills-list">
@@ -296,15 +296,15 @@ async function handleSignOut() {
 				
 				<!-- Links Section -->
 				<section class="form-section">
-					<h2 class="section-title">Linki społecznościowe</h2>
+					<h2 class="section-title">Social Links</h2>
 					<div class="form-group">
-						<label for="website_url" class="form-label">Strona internetowa</label>
+						<label for="website_url" class="form-label">Website</label>
 						<input
 							id="website_url"
 							v-model="profile.website_url"
 							type="url"
 							class="form-input"
-							placeholder="https://twoja-strona.pl"
+							placeholder="https://your-website.com"
 						/>
 					</div>
 					<div class="form-row">
@@ -315,7 +315,7 @@ async function handleSignOut() {
 								v-model="profile.linkedin_url"
 								type="url"
 								class="form-input"
-								placeholder="https://linkedin.com/in/twoj-profil"
+								placeholder="https://linkedin.com/in/your-profile"
 							/>
 						</div>
 						<div class="form-group">
@@ -325,7 +325,7 @@ async function handleSignOut() {
 								v-model="profile.github_url"
 								type="url"
 								class="form-input"
-								placeholder="https://github.com/twoj-profil"
+								placeholder="https://github.com/your-profile"
 							/>
 						</div>
 					</div>
@@ -333,7 +333,7 @@ async function handleSignOut() {
 				
 				<!-- Account Type -->
 				<section class="form-section">
-					<h2 class="section-title">Typ konta</h2>
+					<h2 class="section-title">Account Type</h2>
 					<div class="checkbox-group">
 						<label class="checkbox-label">
 							<input
@@ -341,10 +341,10 @@ async function handleSignOut() {
 								type="checkbox"
 								class="checkbox-input"
 							/>
-							<span class="checkbox-text">Jestem rekruterem</span>
+							<span class="checkbox-text">I am a recruiter</span>
 						</label>
 						<small class="form-hint">
-							Konta rekruterów mają dostęp do dodatkowych funkcji zarządzania ofertami pracy
+							Recruiter accounts have access to additional job posting management features
 						</small>
 					</div>
 				</section>
@@ -356,8 +356,8 @@ async function handleSignOut() {
 						class="save-button"
 						:disabled="isSaving"
 					>
-						<span v-if="isSaving">Zapisywanie...</span>
-						<span v-else>Zapisz zmiany</span>
+						<span v-if="isSaving">Saving...</span>
+						<span v-else>Save Changes</span>
 					</button>
 					
 					<button
@@ -365,7 +365,7 @@ async function handleSignOut() {
 						class="logout-button"
 						@click="handleSignOut"
 					>
-						Wyloguj się
+						Sign Out
 					</button>
 				</div>
 			</form>

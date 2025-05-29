@@ -35,9 +35,9 @@ function validateEmail(email: string): string[] {
 	const validationErrors: string[] = []
 	
 	if (!email) {
-		validationErrors.push('Email jest wymagany')
+		validationErrors.push('Email is required')
 	} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-		validationErrors.push('Nieprawidłowy format email')
+		validationErrors.push('Invalid email format')
 	}
 	
 	return validationErrors
@@ -47,9 +47,9 @@ function validatePassword(password: string): string[] {
 	const validationErrors: string[] = []
 	
 	if (!password) {
-		validationErrors.push('Hasło jest wymagane')
+		validationErrors.push('Password is required')
 	} else if (password.length < 6) {
-		validationErrors.push('Hasło musi mieć co najmniej 6 znaków')
+		validationErrors.push('Password must be at least 6 characters long')
 	}
 	
 	return validationErrors
@@ -86,23 +86,23 @@ async function handleSubmit(): Promise<void> {
 	try {
 		await authStore.signIn(form.email, form.password)
 		
-		// Jeśli dotarliśmy tutaj, logowanie się powiodło
+		// If we reach here, login was successful
 		console.log('Login successful:', { user: authStore.userEmail })
 		router.push('/')
 	} catch (error) {
-		// Mapowanie błędów Supabase na przyjazne komunikaty
-		const errorMessage = (error as AuthError | Error).message || 'Wystąpił błąd podczas logowania'
+		// Map Supabase errors to user-friendly messages
+		const errorMessage = (error as AuthError | Error).message || 'An error occurred during login'
 		
 		switch (errorMessage) {
 			case 'Invalid login credentials':
 			case 'Invalid email or password':
-				errors.api.push('Nieprawidłowy email lub hasło')
+				errors.api.push('Invalid email or password')
 				break
 			case 'Email not confirmed':
-				errors.api.push('Konto nie zostało aktywowane. Sprawdź swoją skrzynkę email.')
+				errors.api.push('Account has not been activated. Check your email inbox.')
 				break
 			case 'Too many requests':
-				errors.api.push('Zbyt wiele prób logowania. Spróbuj ponownie za chwilę.')
+				errors.api.push('Too many login attempts. Please try again in a moment.')
 				break
 			default:
 				errors.api.push(errorMessage)
@@ -120,11 +120,11 @@ function handleRegisterClick(): void {
 <template>
 	<div class="login-container">
 		<div class="login-card">
-			<h1 class="login-title">Zaloguj się</h1>
-			<p class="login-subtitle">Wprowadź swoje dane aby się zalogować</p>
+			<h1 class="login-title">Sign In</h1>
+			<p class="login-subtitle">Enter your credentials to sign in</p>
 			
 			<form @submit.prevent="handleSubmit" class="login-form">
-				<!-- Błędy API -->
+				<!-- API errors -->
 				<div v-if="errors.api.length > 0" class="api-errors">
 					<span v-for="error in errors.api" :key="error" class="api-error">
 						{{ error }}
@@ -139,7 +139,7 @@ function handleRegisterClick(): void {
 						type="email"
 						class="form-input"
 						:class="{ 'form-input--error': errors.email.length > 0 }"
-						placeholder="twoj@email.com"
+						placeholder="your@email.com"
 						@blur="handleEmailBlur"
 						autocomplete="email"
 					/>
@@ -151,14 +151,14 @@ function handleRegisterClick(): void {
 				</div>
 				
 				<div class="form-group">
-					<label for="password" class="form-label">Hasło</label>
+					<label for="password" class="form-label">Password</label>
 					<input
 						id="password"
 						v-model="form.password"
 						type="password"
 						class="form-input"
 						:class="{ 'form-input--error': errors.password.length > 0 }"
-						placeholder="Twoje hasło"
+						placeholder="Your password"
 						@blur="handlePasswordBlur"
 						autocomplete="current-password"
 					/>
@@ -175,20 +175,20 @@ function handleRegisterClick(): void {
 					:class="{ 'submit-button--loading': isLoading }"
 					:disabled="!isFormValid || isLoading"
 				>
-					<span v-if="isLoading">Logowanie...</span>
-					<span v-else>Zaloguj się</span>
+					<span v-if="isLoading">Signing in...</span>
+					<span v-else>Sign In</span>
 				</button>
 			</form>
 			
 			<div class="login-footer">
 				<p class="login-footer-text">
-					Nie masz jeszcze konta?
+					Don't have an account yet?
 					<button
 						type="button"
 						class="link-button"
 						@click="handleRegisterClick"
 					>
-						Zarejestruj się
+						Sign Up
 					</button>
 				</p>
 			</div>

@@ -40,9 +40,9 @@ function validateEmail(email: string): string[] {
 	const validationErrors: string[] = []
 	
 	if (!email) {
-		validationErrors.push('Email jest wymagany')
+		validationErrors.push('Email is required')
 	} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-		validationErrors.push('Nieprawidłowy format email')
+		validationErrors.push('Invalid email format')
 	}
 	
 	return validationErrors
@@ -52,19 +52,19 @@ function validatePassword(password: string): string[] {
 	const validationErrors: string[] = []
 	
 	if (!password) {
-		validationErrors.push('Hasło jest wymagane')
+		validationErrors.push('Password is required')
 	} else {
 		if (password.length < 8) {
-			validationErrors.push('Hasło musi mieć co najmniej 8 znaków')
+			validationErrors.push('Password must be at least 8 characters long')
 		}
 		if (!/(?=.*[a-z])/.test(password)) {
-			validationErrors.push('Hasło musi zawierać co najmniej jedną małą literę')
+			validationErrors.push('Password must contain at least one lowercase letter')
 		}
 		if (!/(?=.*[A-Z])/.test(password)) {
-			validationErrors.push('Hasło musi zawierać co najmniej jedną wielką literę')
+			validationErrors.push('Password must contain at least one uppercase letter')
 		}
 		if (!/(?=.*\d)/.test(password)) {
-			validationErrors.push('Hasło musi zawierać co najmniej jedną cyfrę')
+			validationErrors.push('Password must contain at least one digit')
 		}
 	}
 	
@@ -75,9 +75,9 @@ function validateConfirmPassword(password: string, confirmPassword: string): str
 	const validationErrors: string[] = []
 	
 	if (!confirmPassword) {
-		validationErrors.push('Potwierdzenie hasła jest wymagane')
+		validationErrors.push('Password confirmation is required')
 	} else if (password !== confirmPassword) {
-		validationErrors.push('Hasła muszą być identyczne')
+		validationErrors.push('Passwords must match')
 	}
 	
 	return validationErrors
@@ -109,7 +109,7 @@ function handleEmailBlur(): void {
 
 function handlePasswordBlur(): void {
 	errors.password = validatePassword(form.password)
-	// Rewaliduj potwierdzenie hasła jeśli już zostało wprowadzone
+	// Revalidate password confirmation if it has been entered
 	if (form.confirmPassword) {
 		errors.confirmPassword = validateConfirmPassword(form.password, form.confirmPassword)
 	}
@@ -133,29 +133,29 @@ async function handleSubmit(): Promise<void> {
 		registrationSuccess.value = true
 		console.log('Registration successful - email confirmation required')
 		
-		// Po 3 sekundach przekieruj na login
+		// Redirect to login after 3 seconds
 		setTimeout(() => {
 			router.push('/login')
 		}, 3000)
 	} catch (error) {
-		// Mapowanie błędów Supabase na przyjazne komunikaty
-		const errorMessage = (error as AuthError | Error).message || 'Wystąpił błąd podczas rejestracji'
+		// Map Supabase errors to user-friendly messages
+		const errorMessage = (error as AuthError | Error).message || 'An error occurred during registration'
 		
 		switch (errorMessage) {
 			case 'User already registered':
-				errors.api.push('Użytkownik z tym adresem email już istnieje')
+				errors.api.push('User with this email address already exists')
 				break
 			case 'Password should be at least 6 characters':
-				errors.api.push('Hasło musi mieć co najmniej 6 znaków')
+				errors.api.push('Password must be at least 6 characters long')
 				break
 			case 'Signup requires a valid password':
-				errors.api.push('Hasło jest nieprawidłowe')
+				errors.api.push('Password is invalid')
 				break
 			case 'Invalid email':
-				errors.api.push('Nieprawidłowy adres email')
+				errors.api.push('Invalid email address')
 				break
 			case 'Database error saving new user':
-				errors.api.push('Błąd konfiguracji bazy danych. Skontaktuj się z administratorem.')
+				errors.api.push('Database configuration error. Please contact administrator.')
 				break
 			default:
 				errors.api.push(errorMessage)
@@ -173,19 +173,19 @@ function handleLoginClick(): void {
 <template>
 	<div class="register-container">
 		<div class="register-card">
-			<h1 class="register-title">Zarejestruj się</h1>
-			<p class="register-subtitle">Utwórz nowe konto aby rozpocząć</p>
+			<h1 class="register-title">Sign Up</h1>
+			<p class="register-subtitle">Create a new account to get started</p>
 			
-			<!-- Komunikat sukcesu -->
+			<!-- Success message -->
 			<div v-if="registrationSuccess" class="success-message">
-				<h3 class="success-title">Rejestracja pomyślna! 🎉</h3>
+				<h3 class="success-title">Registration successful! 🎉</h3>
 				<p class="success-text">
-					Sprawdź swoją skrzynkę email i kliknij link aktywacyjny aby dokończyć rejestrację.
+					Check your email inbox and click the activation link to complete your registration.
 				</p>
 			</div>
 			
 			<form v-else @submit.prevent="handleSubmit" class="register-form">
-				<!-- Błędy API -->
+				<!-- API errors -->
 				<div v-if="errors.api.length > 0" class="api-errors">
 					<span v-for="error in errors.api" :key="error" class="api-error">
 						{{ error }}
@@ -200,7 +200,7 @@ function handleLoginClick(): void {
 						type="email"
 						class="form-input"
 						:class="{ 'form-input--error': errors.email.length > 0 }"
-						placeholder="twoj@email.com"
+						placeholder="your@email.com"
 						@blur="handleEmailBlur"
 						autocomplete="email"
 					/>
@@ -212,14 +212,14 @@ function handleLoginClick(): void {
 				</div>
 				
 				<div class="form-group">
-					<label for="password" class="form-label">Hasło</label>
+					<label for="password" class="form-label">Password</label>
 					<input
 						id="password"
 						v-model="form.password"
 						type="password"
 						class="form-input"
 						:class="{ 'form-input--error': errors.password.length > 0 }"
-						placeholder="Twoje hasło"
+						placeholder="Your password"
 						@blur="handlePasswordBlur"
 						autocomplete="new-password"
 					/>
@@ -231,14 +231,14 @@ function handleLoginClick(): void {
 				</div>
 				
 				<div class="form-group">
-					<label for="confirmPassword" class="form-label">Powtórz hasło</label>
+					<label for="confirmPassword" class="form-label">Confirm Password</label>
 					<input
 						id="confirmPassword"
 						v-model="form.confirmPassword"
 						type="password"
 						class="form-input"
 						:class="{ 'form-input--error': errors.confirmPassword.length > 0 }"
-						placeholder="Powtórz swoje hasło"
+						placeholder="Confirm your password"
 						@blur="handleConfirmPasswordBlur"
 						autocomplete="new-password"
 					/>
@@ -250,31 +250,31 @@ function handleLoginClick(): void {
 				</div>
 				
 				<div class="password-requirements">
-					<h4 class="password-requirements-title">Wymagania dla hasła:</h4>
+					<h4 class="password-requirements-title">Password requirements:</h4>
 					<ul class="password-requirements-list">
 						<li 
 							class="password-requirement"
 							:class="{ 'password-requirement--valid': form.password.length >= 8 }"
 						>
-							Co najmniej 8 znaków
+							At least 8 characters
 						</li>
 						<li 
 							class="password-requirement"
 							:class="{ 'password-requirement--valid': /(?=.*[a-z])/.test(form.password) }"
 						>
-							Co najmniej jedna mała litera
+							At least one lowercase letter
 						</li>
 						<li 
 							class="password-requirement"
 							:class="{ 'password-requirement--valid': /(?=.*[A-Z])/.test(form.password) }"
 						>
-							Co najmniej jedna wielka litera
+							At least one uppercase letter
 						</li>
 						<li 
 							class="password-requirement"
 							:class="{ 'password-requirement--valid': /(?=.*\d)/.test(form.password) }"
 						>
-							Co najmniej jedna cyfra
+							At least one digit
 						</li>
 					</ul>
 				</div>
@@ -285,20 +285,20 @@ function handleLoginClick(): void {
 					:class="{ 'submit-button--loading': isLoading }"
 					:disabled="!isFormValid || isLoading"
 				>
-					<span v-if="isLoading">Rejestrowanie...</span>
-					<span v-else>Zarejestruj się</span>
+					<span v-if="isLoading">Signing up...</span>
+					<span v-else>Sign Up</span>
 				</button>
 			</form>
 			
 			<div class="register-footer">
 				<p class="register-footer-text">
-					Masz już konto?
+					Already have an account?
 					<button
 						type="button"
 						class="link-button"
 						@click="handleLoginClick"
 					>
-						Zaloguj się
+						Sign In
 					</button>
 				</p>
 			</div>
