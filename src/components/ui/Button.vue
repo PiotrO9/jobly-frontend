@@ -49,7 +49,7 @@ withDefaults(defineProps<Props>(), {
 		translate 0.3s ease-in-out, 
 		background-color 0.3s ease-in-out, 
 		border-color 0.3s ease-in-out,
-		color 0.3s ease-in-out;
+		color 0.15s ease-in-out;
 	text-align: center;
 	line-height: 1;
 	padding: 0;
@@ -194,6 +194,8 @@ withDefaults(defineProps<Props>(), {
 	align-items: center;
 	justify-content: center;
 	border-radius: 999px;
+	color: inherit;
+	text-decoration: none;
 }
 
 .button.small .text {
