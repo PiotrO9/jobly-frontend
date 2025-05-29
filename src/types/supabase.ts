@@ -1,4 +1,3 @@
-// Supabase common types
 export interface DatabaseResponse<T> {
 	data: T[] | null
 	error: Error | null
@@ -9,7 +8,6 @@ export interface SingleResponse<T> {
 	error: Error | null
 }
 
-// Database Models
 export interface Company {
 	id: string
 	handle: string
@@ -43,7 +41,6 @@ export interface Job {
 	applications_count: number
 	created_at: string
 	updated_at: string
-	// Relations (when joined)
 	company?: Company
 	categories?: JobCategory[]
 }
@@ -67,7 +64,6 @@ export interface UserProfile {
 	company_id?: string
 	created_at: string
 	updated_at: string
-	// Relations
 	company?: Company
 }
 
@@ -80,7 +76,6 @@ export interface Application {
 	resume_url?: string
 	applied_at: string
 	updated_at: string
-	// Relations
 	job?: Job
 	user?: UserProfile
 }
@@ -90,7 +85,6 @@ export interface SavedJob {
 	user_id: string
 	job_id: string
 	created_at: string
-	// Relations
 	job?: Job
 }
 
@@ -102,14 +96,12 @@ export interface JobCategory {
 	created_at: string
 }
 
-// Database table types (extend as needed)
 export interface DatabaseTable {
 	id: string
 	created_at: string
 	updated_at: string
 }
 
-// Query options for database operations
 export interface QueryOptions {
 	columns?: string
 	filters?: Record<string, unknown>
@@ -121,14 +113,12 @@ export interface QueryOptions {
 	offset?: number
 }
 
-// Subscription options for real-time features
 export interface SubscriptionOptions {
 	event?: 'INSERT' | 'UPDATE' | 'DELETE' | '*'
 	schema?: string
 	filter?: string
 }
 
-// Auth form types
 export interface SignUpForm {
 	email: string
 	password: string
@@ -146,7 +136,6 @@ export interface ResetPasswordForm {
 	email: string
 }
 
-// Error handling
 export interface SupabaseError {
 	message: string
 	details?: string

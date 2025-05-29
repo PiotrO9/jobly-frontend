@@ -16,7 +16,6 @@ export function useJobs() {
 	const currentPage = ref(1)
 	const itemsPerPage = 10
 	
-	// Convert database job to component job format
 	function transformDatabaseJobToComponent(dbJob: DatabaseJob & { company?: { id: string; name: string; description?: string; logo_url?: string } }): ComponentJob {
 		return {
 			id: dbJob.id,
@@ -44,7 +43,6 @@ export function useJobs() {
 		}
 	}
 	
-	// Fetch jobs from database
 	async function fetchJobs(filters?: Partial<Filters>) {
 		try {
 			const queryOptions: QueryOptions = {
@@ -67,7 +65,6 @@ export function useJobs() {
 				orderBy: { column: 'created_at', ascending: false }
 			}
 			
-			// Apply filters if provided
 			if (filters) {
 				if (filters.location) {
 					queryOptions.filters.location = `ilike.%${filters.location}%`
@@ -98,7 +95,6 @@ export function useJobs() {
 		}
 	}
 	
-	// Filter jobs locally (for complex filtering that's hard to do in SQL)
 	function filterJobs(filters: Filters): ComponentJob[] {
 		return jobs.value.filter(job => {
 			const matchesKeyword = !filters.keyword || 
@@ -129,19 +125,16 @@ export function useJobs() {
 		})
 	}
 	
-	// Get paginated jobs
 	function getPaginatedJobs(filteredJobs: ComponentJob[], page: number = currentPage.value): ComponentJob[] {
 		const start = (page - 1) * itemsPerPage
 		const end = start + itemsPerPage
 		return filteredJobs.slice(start, end)
 	}
 	
-	// Calculate total pages
 	function getTotalPages(filteredJobs: ComponentJob[]): number {
 		return Math.ceil(filteredJobs.length / itemsPerPage)
 	}
 	
-	// Search jobs with text search
 	async function searchJobs(searchTerm: string, filters?: Partial<Filters>) {
 		try {
 			const queryOptions: QueryOptions & { filters: Record<string, unknown> } = {
@@ -176,9 +169,7 @@ export function useJobs() {
 			
 			if (jobsData) {
 				const searchResults = jobsData.map(transformDatabaseJobToComponent)
-				// Apply additional filters if provided
 				const filtered = filters ? searchResults.filter(job => {
-					// Apply the same filtering logic as filterJobs
 					return filterJobs(filters as Filters).includes(job)
 				}) : searchResults
 				
@@ -192,7 +183,6 @@ export function useJobs() {
 		}
 	}
 	
-	// Get job by ID
 	async function getJobById(jobId: string) {
 		try {
 			const { data: jobsData, error: fetchError } = await select('jobs', {
@@ -239,14 +229,12 @@ export function useJobs() {
 	}
 	
 	return {
-		// State
 		jobs,
 		loading,
 		error,
 		currentPage,
 		itemsPerPage,
 		
-		// Methods
 		fetchJobs,
 		filterJobs,
 		getPaginatedJobs,
@@ -254,7 +242,6 @@ export function useJobs() {
 		searchJobs,
 		getJobById,
 		
-		// Utils
 		transformDatabaseJobToComponent
 	}
 } 

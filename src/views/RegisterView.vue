@@ -109,7 +109,6 @@ function handleEmailBlur(): void {
 
 function handlePasswordBlur(): void {
 	errors.password = validatePassword(form.password)
-	// Revalidate password confirmation if it has been entered
 	if (form.confirmPassword) {
 		errors.confirmPassword = validateConfirmPassword(form.password, form.confirmPassword)
 	}
@@ -133,12 +132,10 @@ async function handleSubmit(): Promise<void> {
 		registrationSuccess.value = true
 		console.log('Registration successful - email confirmation required')
 		
-		// Redirect to login after 3 seconds
 		setTimeout(() => {
 			router.push('/login')
 		}, 3000)
 	} catch (error) {
-		// Map Supabase errors to user-friendly messages
 		const errorMessage = (error as AuthError | Error).message || 'An error occurred during registration'
 		
 		switch (errorMessage) {
@@ -176,7 +173,6 @@ function handleLoginClick(): void {
 			<h1 class="register-title">Sign Up</h1>
 			<p class="register-subtitle">Create a new account to get started</p>
 			
-			<!-- Success message -->
 			<div v-if="registrationSuccess" class="success-message">
 				<h3 class="success-title">Registration successful! 🎉</h3>
 				<p class="success-text">
@@ -185,7 +181,6 @@ function handleLoginClick(): void {
 			</div>
 			
 			<form v-else @submit.prevent="handleSubmit" class="register-form">
-				<!-- API errors -->
 				<div v-if="errors.api.length > 0" class="api-errors">
 					<span v-for="error in errors.api" :key="error" class="api-error">
 						{{ error }}

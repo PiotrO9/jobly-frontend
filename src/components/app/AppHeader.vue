@@ -11,7 +11,6 @@ const authStore = useAuthStore()
 const isMobileMenuOpen = ref(false)
 const isUserMenuOpen = ref(false)
 
-// Watch for mobile menu changes to control body scroll
 watch(isMobileMenuOpen, (isOpen) => {
 	if (isOpen) {
 		document.body.classList.add('scroll-locked')
@@ -20,7 +19,6 @@ watch(isMobileMenuOpen, (isOpen) => {
 	}
 })
 
-// Handle escape key to close mobile menu
 function handleEscapeKey(event: KeyboardEvent) {
 	if (event.key === 'Escape' && isMobileMenuOpen.value) {
 		isMobileMenuOpen.value = false
@@ -30,7 +28,6 @@ function handleEscapeKey(event: KeyboardEvent) {
 	}
 }
 
-// Add/remove escape key listener
 watch([isMobileMenuOpen, isUserMenuOpen], ([mobileOpen, userMenuOpen]) => {
 	if (mobileOpen || userMenuOpen) {
 		document.addEventListener('keydown', handleEscapeKey)
@@ -80,7 +77,6 @@ async function handleSignOut() {
 	}
 }
 
-// Close user menu when clicking outside
 function handleClickOutside(event: Event) {
 	const target = event.target as HTMLElement
 	const userMenu = document.querySelector('.user-menu')
@@ -99,7 +95,6 @@ watch(isUserMenuOpen, (isOpen) => {
 	}
 })
 
-// Cleanup scroll lock and event listeners when component unmounts
 onUnmounted(() => {
 	document.body.classList.remove('scroll-locked')
 	document.removeEventListener('keydown', handleEscapeKey)
@@ -116,7 +111,6 @@ onUnmounted(() => {
 				</router-link>
 			</div>
 
-			<!-- Desktop Navigation -->
 			<nav class="desktop-nav">
 				<ul class="menu-list">
 					<li class="menu-item">
@@ -139,15 +133,12 @@ onUnmounted(() => {
 				</ul>
 			</nav>
 
-			<!-- Desktop Actions -->
 			<div class="desktop-actions">
-				<!-- Not authenticated -->
 				<div v-if="!authStore.isAuthenticated" class="auth-buttons">
 					<Button variant="secondary" text="Login" link="/login" />
 					<Button variant="primary" text="Sign Up" link="/register" />
 				</div>
 				
-				<!-- Authenticated -->
 				<div v-else class="user-menu-wrapper">
 					<button 
 						class="user-menu-button"
@@ -166,7 +157,6 @@ onUnmounted(() => {
 						</svg>
 					</button>
 					
-					<!-- User Dropdown Menu -->
 					<div v-if="isUserMenuOpen" class="user-menu">
 						<div class="user-menu-header">
 							<div class="user-info">
@@ -196,7 +186,6 @@ onUnmounted(() => {
 				</div>
 			</div>
 
-			<!-- Mobile Menu Toggle -->
 			<button 
 				class="mobile-menu-toggle"
 				@click="handleToggleMobileMenu"
@@ -211,14 +200,12 @@ onUnmounted(() => {
 			</button>
 		</div>
 
-		<!-- Mobile Navigation Overlay -->
 		<div 
 			v-if="isMobileMenuOpen"
 			class="mobile-overlay"
 			@click="handleCloseMobileMenu"
 		></div>
 
-		<!-- Mobile Navigation Menu -->
 		<nav class="mobile-nav" :class="{ 'mobile-nav-open': isMobileMenuOpen }">
 			<ul class="mobile-menu-list">
 				<li class="mobile-menu-item">
@@ -237,7 +224,6 @@ onUnmounted(() => {
 					</router-link>
 				</li>
 				
-				<!-- Mobile Auth Section -->
 				<div v-if="!authStore.isAuthenticated" class="mobile-auth">
 					<li class="mobile-menu-item">
 						<router-link to="/login" class="mobile-menu-link" @click="handleCloseMobileMenu">
@@ -249,7 +235,6 @@ onUnmounted(() => {
 					</li>
 				</div>
 				
-				<!-- Mobile User Menu -->
 				<div v-else class="mobile-user-section">
 					<li class="mobile-menu-item mobile-user-info">
 						<div class="mobile-user-avatar">

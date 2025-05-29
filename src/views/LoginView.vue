@@ -86,11 +86,9 @@ async function handleSubmit(): Promise<void> {
 	try {
 		await authStore.signIn(form.email, form.password)
 		
-		// If we reach here, login was successful
 		console.log('Login successful:', { user: authStore.userEmail })
 		router.push('/')
 	} catch (error) {
-		// Map Supabase errors to user-friendly messages
 		const errorMessage = (error as AuthError | Error).message || 'An error occurred during login'
 		
 		switch (errorMessage) {
@@ -124,7 +122,6 @@ function handleRegisterClick(): void {
 			<p class="login-subtitle">Enter your credentials to sign in</p>
 			
 			<form @submit.prevent="handleSubmit" class="login-form">
-				<!-- API errors -->
 				<div v-if="errors.api.length > 0" class="api-errors">
 					<span v-for="error in errors.api" :key="error" class="api-error">
 						{{ error }}

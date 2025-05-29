@@ -3,12 +3,10 @@ import { supabase } from '@/lib/supabase'
 import type { PostgrestError } from '@supabase/supabase-js'
 
 export function useDatabase<T = Record<string, unknown>>() {
-	// Reactive state
 	const data: Ref<T[] | null> = ref(null)
 	const loading = ref(false)
 	const error: Ref<PostgrestError | Error | null> = ref(null)
 
-	// Generic CRUD operations
 	async function select(
 		table: string,
 		options?: {
@@ -25,21 +23,18 @@ export function useDatabase<T = Record<string, unknown>>() {
 
 			let query = supabase.from(table).select(options?.columns || '*')
 
-			// Apply filters
 			if (options?.filters) {
 				Object.entries(options.filters).forEach(([key, value]) => {
 					query = query.eq(key, value)
 				})
 			}
 
-			// Apply ordering
 			if (options?.orderBy) {
 				query = query.order(options.orderBy.column, { 
 					ascending: options.orderBy.ascending ?? true 
 				})
 			}
 
-			// Apply pagination
 			if (options?.limit) {
 				query = query.limit(options.limit)
 			}
@@ -100,7 +95,6 @@ export function useDatabase<T = Record<string, unknown>>() {
 
 			let query = supabase.from(table).update(values)
 
-			// Apply filters
 			Object.entries(filters).forEach(([key, value]) => {
 				query = query.eq(key, value)
 			})
@@ -128,7 +122,6 @@ export function useDatabase<T = Record<string, unknown>>() {
 
 			let query = supabase.from(table).delete()
 
-			// Apply filters
 			Object.entries(filters).forEach(([key, value]) => {
 				query = query.eq(key, value)
 			})
@@ -173,9 +166,7 @@ export function useDatabase<T = Record<string, unknown>>() {
 		}
 	}
 
-	// Real-time subscriptions - basic implementation
 	function subscribe(table: string) {
-		// This is a simplified version - can be extended with callbacks based on specific Supabase version
 		return supabase
 			.channel(`${table}_changes`)
 			.subscribe()
@@ -186,12 +177,10 @@ export function useDatabase<T = Record<string, unknown>>() {
 	}
 
 	return {
-		// State
 		data,
 		loading,
 		error,
 
-		// Methods
 		select,
 		insert,
 		update,
@@ -200,7 +189,6 @@ export function useDatabase<T = Record<string, unknown>>() {
 		subscribe,
 		clearError,
 
-		// Direct access to supabase client
 		supabase
 	}
 } 

@@ -112,11 +112,8 @@ const SALARY_RANGE = {
 	max: 200
 } as const;
 
-
-
 const showMobileFilters = ref(false);
 
-// Watch for mobile filters changes to control body scroll
 watch(showMobileFilters, (isOpen) => {
 	if (isOpen) {
 		document.body.classList.add('scroll-locked');
@@ -125,14 +122,12 @@ watch(showMobileFilters, (isOpen) => {
 	}
 });
 
-// Handle escape key to close mobile filters
 function handleEscapeKey(event: KeyboardEvent) {
 	if (event.key === 'Escape' && showMobileFilters.value) {
 		showMobileFilters.value = false;
 	}
 }
 
-// Add/remove escape key listener
 watch(showMobileFilters, (isOpen) => {
 	if (isOpen) {
 		document.addEventListener('keydown', handleEscapeKey);
@@ -141,7 +136,6 @@ watch(showMobileFilters, (isOpen) => {
 	}
 });
 
-// Initialize useJobs composable
 const { 
 	jobs: jobsFromDB, 
 	loading: jobsLoading, 
@@ -176,7 +170,6 @@ const paginatedJobs = computed(() => {
 	return getPaginatedJobs(filteredJobs.value, currentPage.value);
 });
 
-// Load jobs on component mount
 async function loadJobs() {
 	try {
 		const result = await fetchJobs();
@@ -195,7 +188,7 @@ function handleFiltersUpdate(newFilters: Filters) {
 
 function handleApplyFilters() {
 	console.log('Applied filters:', filters.value);
-	showMobileFilters.value = false; // Close mobile filters after applying
+	showMobileFilters.value = false;
 }
 
 function handleResetFilters() {
@@ -237,12 +230,10 @@ function handleKeyDown(event: KeyboardEvent) {
 	}
 }
 
-// Load jobs when component mounts
 onMounted(() => {
 	loadJobs();
 });
 
-// Cleanup scroll lock and event listeners when component unmounts
 onUnmounted(() => {
 	document.body.classList.remove('scroll-locked');
 	document.removeEventListener('keydown', handleEscapeKey);

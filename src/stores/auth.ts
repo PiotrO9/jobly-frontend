@@ -4,19 +4,16 @@ import { supabase, type User, type Session } from '@/lib/supabase'
 import type { AuthError } from '@supabase/supabase-js'
 
 export const useAuthStore = defineStore('auth', () => {
-	// State
 	const user = ref<User | null>(null)
 	const session = ref<Session | null>(null)
 	const loading = ref(true)
 	const error = ref<AuthError | Error | null>(null)
 
-	// Getters
 	const isAuthenticated = computed(() => !!user.value)
 	const isLoading = computed(() => loading.value)
 	const userEmail = computed(() => user.value?.email || null)
 	const userId = computed(() => user.value?.id || null)
 
-	// Actions
 	async function signUp(email: string, password: string, userData?: object) {
 		try {
 			loading.value = true
@@ -122,22 +119,18 @@ export const useAuthStore = defineStore('auth', () => {
 		loading.value = isLoading
 	}
 
-	// Initialize auth listener
 	function initializeAuth() {
-		// Get initial session
 		supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
 			user.value = currentSession?.user ?? null
 			session.value = currentSession
 			loading.value = false
 		})
 
-		// Listen for auth changes
 		supabase.auth.onAuthStateChange((event, currentSession) => {
 			user.value = currentSession?.user ?? null
 			session.value = currentSession
 			loading.value = false
 			
-			// Clear error on successful auth change
 			if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
 				error.value = null
 			}
@@ -145,19 +138,16 @@ export const useAuthStore = defineStore('auth', () => {
 	}
 
 	return {
-		// State
 		user,
 		session,
 		loading,
 		error,
 		
-		// Getters
 		isAuthenticated,
 		isLoading,
 		userEmail,
 		userId,
 		
-		// Actions
 		signUp,
 		signIn,
 		signOut,

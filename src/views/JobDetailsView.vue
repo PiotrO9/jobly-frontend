@@ -14,7 +14,6 @@
 				<span>Back to Jobs</span>
 			</button>
 
-			<!-- Loading State -->
 			<div v-if="loading" class="loading-state">
 				<div class="loading-spinner">
 					<svg class="animate-spin" fill="none" viewBox="0 0 24 24">
@@ -25,7 +24,6 @@
 				<p class="loading-text">Loading job details...</p>
 			</div>
 
-			<!-- Error State -->
 			<div v-else-if="notFound || error" class="error-state">
 				<div class="error-icon">
 					<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,7 +42,6 @@
 				/>
 			</div>
 
-			<!-- Job Details -->
 			<div v-else-if="job" class="job-card">
 				<div class="job-header">
 					<div class="job-main-info">
@@ -109,7 +106,6 @@
 							>
 								{{ requirement }}
 							</li>
-							<!-- Fallback requirements if none from database -->
 							<template v-if="!job.requirements || job.requirements.length === 0">
 								<li class="requirement-item">
 									{{ job.experience }} level experience in {{ job.skills[0] || 'relevant technology' }} development
@@ -143,7 +139,6 @@
 								</svg>
 								<span>{{ benefit }}</span>
 							</li>
-							<!-- Fallback benefits if none from database -->
 							<template v-if="!job.benefits || job.benefits.length === 0">
 								<li class="benefit-item">
 									<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +212,6 @@ import type { Job } from '../types/job';
 const router = useRouter();
 const route = useRoute();
 
-// Use real data from database
 const { getJobById, loading, error } = useJobs();
 
 const job = ref<Job | null>(null);
@@ -253,14 +247,12 @@ function handleGoBack() {
 function handleApplyJob() {
 	if (job.value) {
 		console.log('Applying for job:', job.value.id);
-		// Here you would typically navigate to application form or open modal
 	}
 }
 
 function handleSaveJob() {
 	if (job.value) {
 		console.log('Saving job:', job.value.id);
-		// Here you would typically save job to user's saved jobs
 	}
 }
 

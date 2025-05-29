@@ -45,7 +45,6 @@ const successMessage = ref('')
 const errorMessage = ref('')
 const newSkill = ref('')
 
-// Check if user is authenticated
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 onMounted(async () => {
@@ -101,7 +100,6 @@ async function handleSaveProfile() {
 		
 		successMessage.value = 'Profile updated successfully!'
 		
-		// Hide message after 3 seconds
 		setTimeout(() => {
 			successMessage.value = ''
 		}, 3000)
@@ -145,15 +143,12 @@ async function handleSignOut() {
 				<p class="settings-subtitle">Manage your profile and preferences</p>
 			</div>
 			
-			<!-- Loading State -->
 			<div v-if="isLoading" class="loading-state">
 				<div class="loading-spinner"></div>
 				<p>Loading profile...</p>
 			</div>
 			
-			<!-- Settings Form -->
 			<form v-else @submit.prevent="handleSaveProfile" class="settings-form">
-				<!-- Success/Error Messages -->
 				<div v-if="successMessage" class="message success">
 					{{ successMessage }}
 				</div>
@@ -161,7 +156,6 @@ async function handleSignOut() {
 					{{ errorMessage }}
 				</div>
 				
-				<!-- User Info Section -->
 				<section class="form-section">
 					<h2 class="section-title">Basic Information</h2>
 					
@@ -227,7 +221,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Bio Section -->
 				<section class="form-section">
 					<h2 class="section-title">About Me</h2>
 					<div class="form-group">
@@ -242,7 +235,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Experience Section -->
 				<section class="form-section">
 					<h2 class="section-title">Experience</h2>
 					<div class="form-row">
@@ -261,7 +253,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Skills Section -->
 				<section class="form-section">
 					<h2 class="section-title">Skills</h2>
 					<div class="skills-input-group">
@@ -294,7 +285,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Links Section -->
 				<section class="form-section">
 					<h2 class="section-title">Social Links</h2>
 					<div class="form-group">
@@ -331,7 +321,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Account Type -->
 				<section class="form-section">
 					<h2 class="section-title">Account Type</h2>
 					<div class="checkbox-group">
@@ -349,7 +338,6 @@ async function handleSignOut() {
 					</div>
 				</section>
 				
-				<!-- Action Buttons -->
 				<div class="form-actions">
 					<button
 						type="submit"

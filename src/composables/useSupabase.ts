@@ -3,13 +3,11 @@ import { supabase, type User, type Session } from '@/lib/supabase'
 import type { AuthError } from '@supabase/supabase-js'
 
 export function useSupabase() {
-	// Reactive state
 	const user: Ref<User | null> = ref(null)
 	const session: Ref<Session | null> = ref(null)
 	const loading = ref(true)
 	const error: Ref<AuthError | Error | null> = ref(null)
 
-	// Auth methods
 	async function signUp(email: string, password: string, userData?: object) {
 		try {
 			loading.value = true
@@ -103,7 +101,6 @@ export function useSupabase() {
 		}
 	}
 
-	// Database methods
 	function from(table: string) {
 		return supabase.from(table)
 	}
@@ -112,24 +109,20 @@ export function useSupabase() {
 		return supabase.storage
 	}
 
-	// Auth state listener
 	let authListener: { data: { subscription: { unsubscribe: () => void } } } | null = null
 
 	function initializeAuth() {
-		// Get initial session
 		supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
 			user.value = currentSession?.user ?? null
 			session.value = currentSession
 			loading.value = false
 		})
 
-		// Listen for auth changes
 		authListener = supabase.auth.onAuthStateChange((event, currentSession) => {
 			user.value = currentSession?.user ?? null
 			session.value = currentSession
 			loading.value = false
 			
-			// Clear error on successful auth change
 			if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
 				error.value = null
 			}
@@ -142,7 +135,6 @@ export function useSupabase() {
 		}
 	}
 
-	// Lifecycle hooks
 	onMounted(() => {
 		initializeAuth()
 	})
@@ -152,23 +144,19 @@ export function useSupabase() {
 	})
 
 	return {
-		// State
 		user,
 		session,
 		loading,
 		error,
 		
-		// Auth methods
 		signUp,
 		signIn,
 		signOut,
 		resetPassword,
 		
-		// Database methods
 		from,
 		storage,
 		
-		// Supabase client (for advanced usage)
 		supabase
 	}
 } 

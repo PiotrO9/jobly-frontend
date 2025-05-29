@@ -14,7 +14,6 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
-// Initialize Supabase auth after Pinia is set up
 const authStore = useAuthStore()
 authStore.initializeAuth()
 
