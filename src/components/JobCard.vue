@@ -16,7 +16,7 @@
 			</div>
 			<div class="job-meta">
 				<span class="job-salary">{{ job.salaryMin }}k - {{ job.salaryMax }}k PLN</span>
-				<p class="job-posted">{{ job.postedDays }} dni temu</p>
+				<p class="job-posted">{{ job.postedDays }} days ago</p>
 			</div>
 		</div>
 		

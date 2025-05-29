@@ -100,12 +100,16 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import JobCard from '../components/JobCard.vue';
 import Button from '../components/ui/Button.vue';
 import BasePagination from '../components/ui/Pagination.vue';
 import JobFilters from '../components/JobFilters.vue';
 import { useJobs } from '../composables/useJobs';
 import type { Filters } from '../types/job';
+
+const route = useRoute();
+const router = useRouter();
 
 const SALARY_RANGE = {
 	min: 50,
@@ -154,7 +158,8 @@ const filters = ref<Filters>({
 	posted: '', 
 	skills: '', 
 	salaryMin: SALARY_RANGE.min,
-	salaryMax: SALARY_RANGE.max 
+	salaryMax: SALARY_RANGE.max,
+	category: ''
 });
 
 const currentPage = ref(1);
@@ -200,10 +205,14 @@ function handleResetFilters() {
 		posted: '', 
 		skills: '', 
 		salaryMin: SALARY_RANGE.min,
-		salaryMax: SALARY_RANGE.max 
+		salaryMax: SALARY_RANGE.max,
+		category: ''
 	};
 	currentPage.value = 1;
 	showMobileFilters.value = false;
+	
+	// Clear URL parameters
+	router.push({ path: '/jobs', query: {} });
 }
 
 function handlePageChange(page: number) {
@@ -230,8 +239,24 @@ function handleKeyDown(event: KeyboardEvent) {
 	}
 }
 
-onMounted(() => {
-	loadJobs();
+// Watch for route changes to handle category filtering
+watch(() => route.query.category, (newCategory) => {
+	if (newCategory && typeof newCategory === 'string') {
+		filters.value.category = newCategory;
+	} else {
+		filters.value.category = '';
+	}
+	currentPage.value = 1;
+}, { immediate: false });
+
+onMounted(async () => {
+	// Check for category parameter in URL
+	const categoryParam = route.query.category as string;
+	if (categoryParam) {
+		filters.value.category = categoryParam;
+	}
+	
+	await loadJobs();
 });
 
 onUnmounted(() => {

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 interface Props {
 	label: string
-	link: string
+	link?: string
 	hasArrow?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
 	label: 'Menu item',
-	link: '/',
+	link: undefined,
 	hasArrow: false
 })
 </script>

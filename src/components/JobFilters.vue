@@ -128,6 +128,18 @@
 				</div>
 			</div>
 			
+			<div class="filter-group">
+				<label class="filter-label">Category</label>
+				<select 
+					v-model="localFilters.category" 
+					class="filter-select"
+					@change="handleFilterChange"
+				>
+					<option value="">Any</option>
+					<option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+				</select>
+			</div>
+			
 			<div class="filter-buttons">
 				<BaseButton 
 					@click="handleApplyFilters" 
@@ -153,9 +165,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import BaseButton from './ui/Button.vue';
 import type { Filters } from '../types/job';
+import { useJobCategories } from '@/composables/useJobCategories';
 
 interface Props {
 	filters: Filters
@@ -173,12 +186,17 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+const { categories, fetchCategories } = useJobCategories();
 
 const localFilters = ref<Filters>({ ...props.filters });
 
 watch(() => props.filters, (newFilters) => {
 	localFilters.value = { ...newFilters };
 }, { deep: true });
+
+onMounted(async () => {
+	await fetchCategories();
+});
 
 function handleFilterChange() {
 	emit('update:filters', { ...localFilters.value });

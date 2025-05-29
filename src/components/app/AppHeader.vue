@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Button from '@/components/ui/Button.vue'
 import MenuItem from '@/components/ui/MenuItem.vue'
+import { useJobCategories } from '@/composables/useJobCategories'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { categories, fetchCategories } = useJobCategories()
 
 const isMobileMenuOpen = ref(false)
 const isUserMenuOpen = ref(false)
+const showMobileCategories = ref(false)
 
 watch(isMobileMenuOpen, (isOpen) => {
 	if (isOpen) {
@@ -95,6 +98,28 @@ watch(isUserMenuOpen, (isOpen) => {
 	}
 })
 
+function handleNavigateToCategory(categoryId: string) {
+	router.push({ path: '/jobs', query: { category: categoryId } })
+}
+
+function toggleMobileCategories() {
+	showMobileCategories.value = !showMobileCategories.value
+}
+
+function handleMobileCategoryClick(categoryId: string) {
+	router.push({ path: '/jobs', query: { category: categoryId } })
+	showMobileCategories.value = false
+	handleCloseMobileMenu()
+}
+
+function handleViewAllJobs() {
+	router.push({ path: '/jobs' })
+}
+
+onMounted(async () => {
+	await fetchCategories()
+})
+
 onUnmounted(() => {
 	document.body.classList.remove('scroll-locked')
 	document.removeEventListener('keydown', handleEscapeKey)
@@ -123,10 +148,41 @@ onUnmounted(() => {
 							Jobs
 						</router-link>
 					</li>
-					<MenuItem label="Find a job" link="/find-a-job" hasArrow>
+					<MenuItem label="Find a job" hasArrow>
 						<template #content>
 							<div class="dropdown-content">
-								<h2>Job Categories</h2>
+								<h3 class="dropdown-title">Job Categories</h3>
+								<ul class="categories-list">
+									<li 
+										v-for="category in categories" 
+										:key="category.id"
+										class="category-item"
+									>
+										<button
+											@click="handleNavigateToCategory(category.id)"
+											@keydown="handleKeyDown"
+											tabindex="0"
+											:aria-label="`Browse ${category.name} jobs`"
+											class="category-link"
+										>
+											<span class="category-name">{{ category.name }}</span>
+											<span v-if="category.description" class="category-description">
+												{{ category.description }}
+											</span>
+										</button>
+									</li>
+								</ul>
+								<div class="dropdown-footer">
+									<Button 
+										variant="details" 
+										text="View All Jobs" 
+										@click="handleViewAllJobs" 
+										@keydown="handleKeyDown" 
+										tabindex="0" 
+										class="view-all-link"
+										aria-label="View all jobs" 
+									/>
+								</div>
 							</div>
 						</template>
 					</MenuItem>
@@ -207,61 +263,135 @@ onUnmounted(() => {
 		></div>
 
 		<nav class="mobile-nav" :class="{ 'mobile-nav-open': isMobileMenuOpen }">
-			<ul class="mobile-menu-list">
-				<li class="mobile-menu-item">
-					<router-link to="/" class="mobile-menu-link" @click="handleCloseMobileMenu">
-						Home
-					</router-link>
-				</li>
-				<li class="mobile-menu-item">
-					<router-link to="/jobs" class="mobile-menu-link" @click="handleCloseMobileMenu">
-						Jobs
-					</router-link>
-				</li>
-				<li class="mobile-menu-item">
-					<router-link to="/find-a-job" class="mobile-menu-link" @click="handleCloseMobileMenu">
-						Find a job
-					</router-link>
-				</li>
-				
-				<div v-if="!authStore.isAuthenticated" class="mobile-auth">
+			<div class="mobile-nav-header">
+				<div class="mobile-nav-title">Menu</div>
+				<button 
+					class="mobile-nav-close"
+					@click="handleCloseMobileMenu"
+					@keydown="handleKeyDown"
+					tabindex="0"
+					aria-label="Close menu"
+				>
+				</button>
+			</div>
+			
+			<div class="mobile-nav-content">
+				<ul class="mobile-menu-list">
 					<li class="mobile-menu-item">
-						<router-link to="/login" class="mobile-menu-link" @click="handleCloseMobileMenu">
-							Login
+						<router-link to="/" class="mobile-menu-link" @click="handleCloseMobileMenu">
+							<svg class="mobile-menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+								<polyline points="9,22 9,12 15,12 15,22"></polyline>
+							</svg>
+							Home
 						</router-link>
 					</li>
-					<li class="mobile-menu-item mobile-signup">
-						<Button variant="primary" text="Sign Up" link="/register" @click="handleCloseMobileMenu" />
+					<li class="mobile-menu-item">
+						<router-link to="/jobs" class="mobile-menu-link" @click="handleCloseMobileMenu">
+							<svg class="mobile-menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+								<line x1="8" y1="21" x2="16" y2="21"></line>
+								<line x1="12" y1="17" x2="12" y2="21"></line>
+							</svg>
+							Jobs
+						</router-link>
 					</li>
+					
+					<li class="mobile-menu-item mobile-categories-item">
+						<button 
+							class="mobile-categories-toggle"
+							@click="toggleMobileCategories"
+							@keydown="handleKeyDown"
+							tabindex="0"
+							aria-label="Toggle job categories"
+							:aria-expanded="showMobileCategories"
+						>
+							<div class="mobile-categories-toggle-content">
+								<span>Job Categories</span>
+							</div>
+							<svg 
+								class="mobile-categories-arrow" 
+								:class="{ 'rotated': showMobileCategories }"
+								xmlns="http://www.w3.org/2000/svg" 
+								width="16" 
+								height="16" 
+								viewBox="0 0 24 24" 
+								fill="none" 
+								stroke="currentColor" 
+								stroke-width="2" 
+								stroke-linecap="round" 
+								stroke-linejoin="round"
+							>
+								<polyline points="6,9 12,15 18,9"></polyline>
+							</svg>
+						</button>
+						
+						<div v-if="showMobileCategories" class="mobile-categories-list">
+							<button
+								v-for="category in categories"
+								:key="category.id"
+								@click="handleMobileCategoryClick(category.id)"
+								@keydown="handleKeyDown"
+								tabindex="0"
+								:aria-label="`Browse ${category.name} jobs`"
+								class="mobile-category-link"
+							>
+								<span class="mobile-category-name">{{ category.name }}</span>
+								<span v-if="category.description" class="mobile-category-description">
+									{{ category.description }}
+								</span>
+							</button>
+						</div>
+					</li>
+				</ul>
+				
+				<div v-if="!authStore.isAuthenticated" class="mobile-auth-section">
+					<div class="mobile-auth-buttons">
+						<router-link to="/login" class="mobile-auth-link mobile-login" @click="handleCloseMobileMenu">
+							Login
+						</router-link>
+						<router-link to="/register" class="mobile-auth-link mobile-signup" @click="handleCloseMobileMenu">
+							Sign Up
+						</router-link>
+					</div>
 				</div>
 				
 				<div v-else class="mobile-user-section">
-					<li class="mobile-menu-item mobile-user-info">
+					<div class="mobile-user-info">
 						<div class="mobile-user-avatar">
 							{{ authStore.userEmail?.charAt(0).toUpperCase() }}
 						</div>
 						<div class="mobile-user-details">
 							<div class="mobile-user-email">{{ authStore.userEmail }}</div>
+							<div class="mobile-user-status">Logged in</div>
 						</div>
-					</li>
-					<li class="mobile-menu-item">
-						<button class="mobile-menu-link" @click="handleNavigateToSettings">
+					</div>
+					
+					<div class="mobile-user-actions">
+						<button class="mobile-user-action" @click="handleNavigateToSettings">
+							<svg class="mobile-menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="3"></circle>
+								<path d="m12 1 1.27 2.76 2.76 1.27-2.76 1.27L12 9l-1.27-2.76-2.76-1.27 2.76-1.27L12 1"></path>
+								<path d="m19 12 1.27 2.76 2.76 1.27-2.76 1.27L19 21l-1.27-2.76-2.76-1.27 2.76-1.27L19 12"></path>
+							</svg>
 							Account Settings
 						</button>
-					</li>
-					<li class="mobile-menu-item">
-						<button class="mobile-menu-link logout" @click="handleSignOut">
+						<button class="mobile-user-action mobile-logout" @click="handleSignOut">
+							<svg class="mobile-menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+								<polyline points="16,17 21,12 16,7"></polyline>
+								<line x1="21" y1="12" x2="9" y2="12"></line>
+							</svg>
 							Sign Out
 						</button>
-					</li>
+					</div>
 				</div>
-			</ul>
+			</div>
 		</nav>
 	</header>
 </template>
 
 <style scoped>
-/* Base Header Styles */
 .header {
 	width: 100%;
 	background-color: var(--color-background, #ffffff);
@@ -280,7 +410,6 @@ onUnmounted(() => {
 	margin: 0 auto;
 }
 
-/* Logo */
 .logo-wrapper {
 	flex-shrink: 0;
 }
@@ -292,7 +421,6 @@ onUnmounted(() => {
 	text-decoration: none;
 }
 
-/* Desktop Navigation */
 .desktop-nav {
 	display: none;
 }
@@ -323,12 +451,90 @@ onUnmounted(() => {
 	color: #111827;
 }
 
-/* Desktop Actions */
 .desktop-actions {
 	display: none;
 }
 
-/* Mobile Menu Toggle */
+.dropdown-content {
+	border: 2px solid var(--gray-600, #4b5563);
+	border-radius: 1rem;
+	background-color: var(--color-background, #ffffff);
+	position: absolute;
+	top: 30px;
+	left: 0;
+	padding: 1.5rem;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+	min-width: 320px;
+	max-width: 400px;
+}
+
+.dropdown-title {
+	margin: 0 0 1rem 0;
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: #111827;
+}
+
+.categories-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.category-item {
+	margin: 0;
+}
+
+.category-link {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 0.75rem;
+	background: none;
+	border: none;
+	border-radius: 0.5rem;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.category-link:hover {
+	background-color: #f9fafb;
+}
+
+.category-link:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px #3b82f6;
+	background-color: #f9fafb;
+}
+
+.category-name {
+	font-weight: 500;
+	font-size: 0.875rem;
+	color: #111827;
+}
+
+.category-description {
+	font-size: 0.75rem;
+	color: #6b7280;
+	margin-left: auto;
+	text-align: end;
+}
+
+.dropdown-footer {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #e5e7eb;
+
+	.view-all-link {
+		width: 100%;
+	}
+}
+
 .mobile-menu-toggle {
 	display: flex;
 	flex-direction: column;
@@ -370,7 +576,6 @@ onUnmounted(() => {
 	transform: rotate(-45deg);
 }
 
-/* Mobile Overlay */
 .mobile-overlay {
 	position: fixed;
 	top: 0;
@@ -381,75 +586,305 @@ onUnmounted(() => {
 	z-index: 118;
 }
 
-/* Mobile Navigation */
 .mobile-nav {
 	position: fixed;
 	top: 0;
 	right: -100%;
 	height: 100vh;
-	width: 280px;
+	width: 320px;
 	background-color: var(--color-background, #ffffff);
-	box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+	box-shadow: -2px 0 20px rgba(0, 0, 0, 0.15);
 	transition: right 0.3s ease-in-out;
 	z-index: 120;
-	padding-top: 5rem;
+	display: flex;
+	flex-direction: column;
 }
 
 .mobile-nav-open {
 	right: 0;
 }
 
+.mobile-nav-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1.5rem;
+	border-bottom: 1px solid #e5e7eb;
+	background-color: #f9fafb;
+}
+
+.mobile-nav-title {
+	font-size: 1.125rem;
+	font-weight: 700;
+	color: #111827;
+}
+
+.mobile-nav-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	background: none;
+	border: none;
+	border-radius: 0.375rem;
+	color: #6b7280;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.mobile-nav-close:hover {
+	background-color: #e5e7eb;
+	color: #111827;
+}
+
+.mobile-nav-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
 .mobile-menu-list {
 	list-style: none;
 	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
+	padding: 1rem 0;
+	flex: 1;
 }
 
 .mobile-menu-item {
-	border-bottom: 1px solid #f3f4f6;
+	margin: 0;
 }
 
 .mobile-menu-link {
-	display: block;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
 	padding: 1rem 1.5rem;
 	color: #374151;
 	text-decoration: none;
 	font-size: 1rem;
 	font-weight: 500;
-	transition: background-color 0.2s;
+	transition: all 0.2s ease;
+	border-left: 3px solid transparent;
 }
 
 .mobile-menu-link:hover {
 	background-color: #f9fafb;
 	color: #111827;
+	border-left-color: var(--color-primary, #3b82f6);
 }
 
-.mobile-login {
-	padding: 1.5rem;
-	border-bottom: none;
+.mobile-menu-link.router-link-active {
+	background-color: #eff6ff;
+	color: var(--color-primary, #3b82f6);
+	border-left-color: var(--color-primary, #3b82f6);
 }
 
-/* Dropdown Content */
-.dropdown-content {
-	border: 2px solid var(--gray-600, #4b5563);
-	border-radius: 1rem;
-	background-color: var(--color-background, #ffffff);
-	position: absolute;
-	top: 30px;
-	left: 0;
-	padding: 2.5rem 3.75rem;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+.mobile-menu-icon {
+	flex-shrink: 0;
+	color: currentColor;
 }
 
-.dropdown-content h2 {
-	margin: 0;
-	font-size: 1.125rem;
+.mobile-categories {
+	border-bottom: 1px solid #f3f4f6;
+}
+
+.mobile-categories-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 1rem 1.5rem;
+	background: none;
+	border: none;
+	color: #374151;
+	text-decoration: none;
+	font-size: 1rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.mobile-categories-toggle:hover {
+	background-color: #f9fafb;
 	color: #111827;
 }
 
-/* Tablet Styles (768px+) */
+.mobile-categories-arrow {
+	transition: transform 0.2s ease;
+	color: #6b7280;
+}
+
+.mobile-categories-arrow.rotated {
+	transform: rotate(180deg);
+}
+
+.mobile-categories-list {
+	background-color: #f9fafb;
+	border-top: 1px solid #e5e7eb;
+}
+
+.mobile-category-link {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 0.75rem 2rem;
+	background: none;
+	border: none;
+	color: #374151;
+	font-size: 0.875rem;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	gap: 0.75rem;
+	justify-content: space-between;
+}
+
+.mobile-category-link:hover {
+	background-color: #f3f4f6;
+	color: #111827;
+}
+
+.mobile-category-name {
+	font-weight: 500;
+}
+
+.mobile-category-description {
+	font-size: 0.75rem;
+	color: #6b7280;
+	margin-left: auto;
+	text-align: end;
+}
+
+.mobile-auth-section {
+	padding: 1.5rem;
+	border-top: 1px solid #e5e7eb;
+	background-color: #f9fafb;
+}
+
+.mobile-auth-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.mobile-auth-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.875rem 1.5rem;
+	border-radius: 0.5rem;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.875rem;
+	transition: all 0.2s ease;
+}
+
+.mobile-login {
+	background-color: #ffffff;
+	color: #374151;
+	border: 1px solid #d1d5db;
+}
+
+.mobile-login:hover {
+	background-color: #f9fafb;
+	border-color: #9ca3af;
+}
+
+.mobile-signup {
+	background-color: var(--color-primary, #3b82f6);
+	color: #ffffff;
+	border: 1px solid var(--color-primary, #3b82f6);
+}
+
+.mobile-signup:hover {
+	background-color: #2563eb;
+	border-color: #2563eb;
+}
+
+.mobile-user-section {
+	border-top: 1px solid #e5e7eb;
+	background-color: #f9fafb;
+}
+
+.mobile-user-info {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1.5rem;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.mobile-user-avatar {
+	width: 3rem;
+	height: 3rem;
+	background-color: var(--color-primary, #3b82f6);
+	color: white;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	font-size: 1.125rem;
+	flex-shrink: 0;
+}
+
+.mobile-user-details {
+	flex: 1;
+	min-width: 0;
+}
+
+.mobile-user-email {
+	font-weight: 600;
+	color: #111827;
+	font-size: 0.875rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.mobile-user-status {
+	font-size: 0.75rem;
+	color: #6b7280;
+	margin-top: 0.125rem;
+}
+
+.mobile-user-actions {
+	padding: 0.5rem 0;
+}
+
+.mobile-user-action {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+	padding: 1rem 1.5rem;
+	background: none;
+	border: none;
+	color: #374151;
+	font-size: 0.875rem;
+	font-weight: 500;
+	text-align: left;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.mobile-user-action:hover {
+	background-color: #f3f4f6;
+	color: #111827;
+}
+
+.mobile-user-action.mobile-logout {
+	color: #dc2626;
+}
+
+.mobile-user-action.mobile-logout:hover {
+	background-color: #fef2f2;
+	color: #b91c1c;
+}
+
 @media (min-width: 768px) {
 	.header-wrapper {
 		padding: 1.25rem 2rem;
@@ -473,7 +908,6 @@ onUnmounted(() => {
 	}
 }
 
-/* Desktop Styles (1024px+) */
 @media (min-width: 1024px) {
 	.header-wrapper {
 		padding: 1.5rem 2rem;
@@ -509,7 +943,6 @@ onUnmounted(() => {
 	}
 }
 
-/* Large Desktop (1280px+) */
 @media (min-width: 1280px) {
 	.header-wrapper {
 		max-width: 1280px;
@@ -529,7 +962,6 @@ onUnmounted(() => {
 	}
 }
 
-/* Extra Large Desktop (1536px+) */
 @media (min-width: 1536px) {
 	.header-wrapper {
 		max-width: 1536px;
@@ -537,7 +969,6 @@ onUnmounted(() => {
 	}
 }
 
-/* Focus and Accessibility */
 .menu-link:focus,
 .mobile-menu-link:focus {
 	outline: none;
@@ -545,7 +976,6 @@ onUnmounted(() => {
 	border-radius: 0.25rem;
 }
 
-/* Animations */
 @media (prefers-reduced-motion: no-preference) {
 	.mobile-nav {
 		transition: right 0.3s ease-in-out;
@@ -561,14 +991,12 @@ onUnmounted(() => {
 	}
 }
 
-/* Auth Buttons */
 .auth-buttons {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
 }
 
-/* User Menu Styles */
 .user-menu-wrapper {
 	position: relative;
 }
@@ -700,7 +1128,6 @@ onUnmounted(() => {
 	color: #dc2626;
 }
 
-/* Mobile User Styles */
 .mobile-auth {
 	border-top: 1px solid #f3f4f6;
 	margin-top: 1rem;

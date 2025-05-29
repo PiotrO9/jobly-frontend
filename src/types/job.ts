@@ -15,6 +15,7 @@ export interface Job {
 	equity?: number;
 	remoteAllowed?: boolean;
 	currency?: string;
+	category?: string;
 	companyDetails?: {
 		id: string;
 		name: string;
@@ -32,8 +33,15 @@ export interface Filters {
 	skills: string;
 	salaryMin: number;
 	salaryMax: number;
+	category?: string;
 }
 
 export interface JobCardProps {
 	job: Job;
+}
+
+export interface JobCategory {
+	id: string;
+	name: string;
+	description?: string;
 } 

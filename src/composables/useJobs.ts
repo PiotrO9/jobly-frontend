@@ -16,7 +16,13 @@ export function useJobs() {
 	const currentPage = ref(1)
 	const itemsPerPage = 10
 	
-	function transformDatabaseJobToComponent(dbJob: DatabaseJob & { company?: { id: string; name: string; description?: string; logo_url?: string } }): ComponentJob {
+	function transformDatabaseJobToComponent(dbJob: DatabaseJob & { 
+		company?: { id: string; name: string; description?: string; logo_url?: string }
+		job_category_relations?: Array<{ job_categories: { id: string; name: string } }>
+	}): ComponentJob {
+		const categories = dbJob.job_category_relations?.map(relation => relation.job_categories) || []
+		const primaryCategory = categories.length > 0 ? categories[0].id : undefined
+
 		return {
 			id: dbJob.id,
 			title: dbJob.title,
@@ -34,6 +40,7 @@ export function useJobs() {
 			equity: dbJob.equity || 0,
 			remoteAllowed: dbJob.remote_allowed || false,
 			currency: dbJob.currency || 'PLN',
+			category: primaryCategory,
 			companyDetails: dbJob.company ? {
 				id: dbJob.company.id,
 				name: dbJob.company.name,
@@ -59,6 +66,12 @@ export function useJobs() {
 					skills,
 					companies (
 						name
+					),
+					job_category_relations (
+						job_categories (
+							id,
+							name
+						)
 					)
 				`,
 				filters: { status: 'active' },
@@ -120,8 +133,11 @@ export function useJobs() {
 			const matchesSalary = job.salaryMax >= filters.salaryMin && 
 				job.salaryMin <= filters.salaryMax
 			
+			const matchesCategory = !filters.category || 
+				job.category === filters.category
+			
 			return matchesKeyword && matchesLocation && matchesType && 
-				matchesExperience && matchesPosted && matchesSkills && matchesSalary
+				matchesExperience && matchesPosted && matchesSkills && matchesSalary && matchesCategory
 		})
 	}
 	
@@ -151,6 +167,12 @@ export function useJobs() {
 					skills,
 					companies (
 						name
+					),
+					job_category_relations (
+						job_categories (
+							id,
+							name
+						)
 					)
 				`,
 				filters: { 
@@ -206,6 +228,12 @@ export function useJobs() {
 						name,
 						description,
 						logo_url
+					),
+					job_category_relations (
+						job_categories (
+							id,
+							name
+						)
 					)
 				`,
 				filters: { id: jobId, status: 'active' }
