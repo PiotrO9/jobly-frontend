@@ -1,7 +1,7 @@
 <template>
 	<div class="job-board">
-		<button
-			class="mobile-filter-toggle"
+		<Button
+			variant="mobile-filter-toggle"
 			:class="{ 'toggle-behind': showMobileFilters }"
 			@click="handleToggleMobileFilters"
 			@keydown="handleKeyDown"
@@ -12,7 +12,7 @@
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
 			</svg>
 			<span class="filter-text">Filters</span>
-		</button>
+		</Button>
 
 		<div 
 			v-if="showMobileFilters"
@@ -52,7 +52,7 @@
 					</div>
 					<h3 class="error-title">Error loading jobs</h3>
 					<p class="error-message">{{ jobsError }}</p>
-					<BaseButton 
+					<Button 
 						@click="loadJobs" 
 						variant="primary" 
 						text="Try Again"
@@ -71,7 +71,7 @@
 						<p class="no-jobs-suggestion">
 							Try adjusting your filters or broadening your search criteria.
 						</p>
-						<BaseButton 
+						<Button 
 							@click="handleResetFilters"
 							@keydown="handleKeyDown"
 							tabindex="0"
@@ -101,7 +101,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import JobCard from '../components/JobCard.vue';
-import BaseButton from '../components/ui/Button.vue';
+import Button from '../components/ui/Button.vue';
 import BasePagination from '../components/ui/Pagination.vue';
 import JobFilters from '../components/JobFilters.vue';
 import { useJobs } from '../composables/useJobs';

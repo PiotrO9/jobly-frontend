@@ -3,6 +3,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useDatabase } from '@/composables/useDatabase'
+import Button from '@/components/ui/Button.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -255,7 +256,7 @@ async function handleSignOut() {
 				
 				<section class="form-section">
 					<h2 class="section-title">Skills</h2>
-					<div class="skills-input-group">
+					<div class="skill-input-group">
 						<input
 							v-model="newSkill"
 							type="text"
@@ -263,9 +264,9 @@ async function handleSignOut() {
 							placeholder="Add skill (e.g. JavaScript)"
 							@keyup.enter="handleAddSkill"
 						/>
-						<button type="button" class="add-skill-btn" @click="handleAddSkill">
+						<Button type="button" variant="add-skill" @click="handleAddSkill">
 							Add
-						</button>
+						</Button>
 					</div>
 					<div v-if="profile.skills && profile.skills.length > 0" class="skills-list">
 						<span
@@ -274,13 +275,12 @@ async function handleSignOut() {
 							class="skill-tag"
 						>
 							{{ skill }}
-							<button
+							<Button
 								type="button"
-								class="remove-skill-btn"
+								variant="remove-skill"
 								@click="handleRemoveSkill(skill)"
-							>
-								×
-							</button>
+								text="×"
+							/>
 						</span>
 					</div>
 				</section>
@@ -339,22 +339,21 @@ async function handleSignOut() {
 				</section>
 				
 				<div class="form-actions">
-					<button
+					<Button
 						type="submit"
-						class="save-button"
+						variant="save"
 						:disabled="isSaving"
 					>
 						<span v-if="isSaving">Saving...</span>
 						<span v-else>Save Changes</span>
-					</button>
+					</Button>
 					
-					<button
+					<Button
 						type="button"
-						class="logout-button"
+						variant="logout"
 						@click="handleSignOut"
-					>
-						Sign Out
-					</button>
+						text="Sign Out"
+					/>
 				</div>
 			</form>
 		</div>
@@ -504,29 +503,14 @@ async function handleSignOut() {
 	color: var(--gray-600);
 }
 
-.skills-input-group {
+.skill-input-group {
 	display: flex;
 	gap: 0.5rem;
 	margin-bottom: 1rem;
 }
 
-.skills-input-group .form-input {
+.skill-input-group .form-input {
 	flex: 1;
-}
-
-.add-skill-btn {
-	padding: 0.75rem 1.5rem;
-	background-color: var(--color-primary);
-	color: white;
-	border: none;
-	border-radius: 6px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-.add-skill-btn:hover {
-	background-color: var(--color-primary-hover);
 }
 
 .skills-list {
@@ -545,27 +529,6 @@ async function handleSignOut() {
 	border-radius: 20px;
 	font-size: 0.875rem;
 	font-weight: 500;
-}
-
-.remove-skill-btn {
-	background: none;
-	border: none;
-	color: #0369a1;
-	cursor: pointer;
-	font-size: 1.25rem;
-	line-height: 1;
-	padding: 0;
-	width: 1.5rem;
-	height: 1.5rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	transition: background-color 0.2s ease;
-}
-
-.remove-skill-btn:hover {
-	background-color: rgba(3, 105, 161, 0.1);
 }
 
 .checkbox-group {
@@ -603,43 +566,6 @@ async function handleSignOut() {
 	border-top: 1px solid #e5e7eb;
 }
 
-.save-button {
-	background-color: var(--color-primary);
-	color: white;
-	border: none;
-	padding: 0.75rem 2rem;
-	border-radius: 6px;
-	font-size: 1rem;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-.save-button:hover:not(:disabled) {
-	background-color: var(--color-primary-hover);
-}
-
-.save-button:disabled {
-	background-color: #9ca3af;
-	cursor: not-allowed;
-}
-
-.logout-button {
-	background-color: #dc2626;
-	color: white;
-	border: none;
-	padding: 0.75rem 1.5rem;
-	border-radius: 6px;
-	font-size: 1rem;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-.logout-button:hover {
-	background-color: #b91c1c;
-}
-
 @media (max-width: 640px) {
 	.settings-container {
 		padding: 1rem;
@@ -665,7 +591,7 @@ async function handleSignOut() {
 		flex-direction: column;
 	}
 	
-	.skills-input-group {
+	.skill-input-group {
 		flex-direction: column;
 	}
 }

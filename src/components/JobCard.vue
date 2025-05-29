@@ -34,21 +34,21 @@
 					{{ skill }}
 				</span>
 			</div>
-			<button 
+			<Button 
 				@click="handleViewDetails"
 				@keydown="handleDetailsKeyDown"
 				tabindex="0"
 				aria-label="See job details"
-				class="btn-details"
-			>
-				Details
-			</button>
+				variant="details"
+				text="Details"
+			/>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import Button from '@/components/ui/Button.vue';
 import type { JobCardProps } from '@/types/job';
 
 const props = defineProps<JobCardProps>();
@@ -195,30 +195,6 @@ function handleDetailsKeyDown(event: KeyboardEvent) {
 .tag-skill {
 	background-color: #f3f4f6;
 	color: #374151;
-}
-
-.btn-details {
-	padding: 8px 16px;
-	background-color: #f9fafb;
-	color: #374151;
-	font-size: 14px;
-	font-weight: 500;
-	border: 1px solid #d1d5db;
-	border-radius: 6px;
-	cursor: pointer;
-	transition: all 0.2s ease-in-out;
-	font-family: 'Roboto', sans-serif;
-}
-
-.btn-details:hover {
-	background-color: #2563eb;
-	color: #ffffff;
-	border-color: #2563eb;
-}
-
-.btn-details:focus {
-	outline: none;
-	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 </style>
 

@@ -3,6 +3,7 @@ import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { AuthError } from '@supabase/supabase-js'
+import Button from '@/components/ui/Button.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -274,27 +275,26 @@ function handleLoginClick(): void {
 					</ul>
 				</div>
 				
-				<button
+				<Button
 					type="submit"
-					class="submit-button"
-					:class="{ 'submit-button--loading': isLoading }"
+					variant="submit"
 					:disabled="!isFormValid || isLoading"
+					@click="handleSubmit"
 				>
 					<span v-if="isLoading">Signing up...</span>
 					<span v-else>Sign Up</span>
-				</button>
+				</Button>
 			</form>
 			
 			<div class="register-footer">
 				<p class="register-footer-text">
 					Already have an account?
-					<button
+					<Button
 						type="button"
-						class="link-button"
+						variant="link-button"
 						@click="handleLoginClick"
-					>
-						Sign In
-					</button>
+						text="Sign In"
+					/>
 				</p>
 			</div>
 		</div>
@@ -474,32 +474,6 @@ function handleLoginClick(): void {
 	color: #16a34a;
 }
 
-.submit-button {
-	background-color: var(--color-primary);
-	color: white;
-	border: none;
-	padding: 0.75rem 1rem;
-	border-radius: 6px;
-	font-size: 1rem;
-	font-weight: 600;
-	cursor: pointer;
-	transition: all 0.2s ease;
-	margin-top: 0.5rem;
-}
-
-.submit-button:hover:not(:disabled) {
-	background-color: var(--color-primary-hover);
-}
-
-.submit-button:disabled {
-	background-color: #9ca3af;
-	cursor: not-allowed;
-}
-
-.submit-button--loading {
-	background-color: #9ca3af;
-}
-
 .register-footer {
 	margin-top: 2rem;
 	text-align: center;
@@ -509,20 +483,6 @@ function handleLoginClick(): void {
 	color: var(--gray-600);
 	font-size: 0.875rem;
 	margin: 0;
-}
-
-.link-button {
-	background: none;
-	border: none;
-	color: var(--color-primary);
-	cursor: pointer;
-	font-weight: 600;
-	text-decoration: underline;
-	font-size: inherit;
-}
-
-.link-button:hover {
-	color: var(--color-primary-hover);
 }
 
 @media (max-width: 480px) {

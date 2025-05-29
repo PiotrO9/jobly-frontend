@@ -4,12 +4,13 @@ defineOptions({
 })
 
 interface Props {
-	variant: 'primary' | 'secondary' | 'filter-primary' | 'filter-secondary' | 'pagination' | 'apply',
-	text: string
+	variant?: 'primary' | 'secondary' | 'filter-primary' | 'filter-secondary' | 'pagination' | 'apply' | 'submit' | 'link-button' | 'back-button' | 'user-menu-button' | 'mobile-menu-toggle' | 'mobile-filter-toggle' | 'details' | 'add-skill' | 'remove-skill' | 'save' | 'logout',
+	text?: string
 	size?: 'small' | 'big' | 'medium'
 	link?: string
 	active?: boolean
 	disabled?: boolean
+	type?: 'button' | 'submit' | 'reset'
 }
 
 withDefaults(defineProps<Props>(), {
@@ -17,7 +18,8 @@ withDefaults(defineProps<Props>(), {
 	text: 'Button',
 	size: 'small',
 	active: false,
-	disabled: false
+	disabled: false,
+	type: 'button'
 })
 </script>
 
@@ -26,13 +28,14 @@ withDefaults(defineProps<Props>(), {
 		:class="[variant, size, { active, disabled }]" 
 		class="button"
 		:disabled="disabled"
+		:type="type"
 		v-bind="$attrs"
 	>
 		<a v-if="link" :href="link" class="text">
-			{{ text }}
+			<slot>{{ text }}</slot>
 		</a>
 		<span v-else class="text">
-			{{ text }}
+			<slot>{{ text }}</slot>
 		</span>
 	</button>
 </template>
@@ -223,5 +226,321 @@ withDefaults(defineProps<Props>(), {
 .button.pagination .text,
 .button.apply .text {
 	border-radius: 6px;
+}
+
+/* Submit Button */
+.button.submit {
+	background-color: var(--color-primary);
+	color: white;
+	border: none;
+	padding: 0;
+	border-radius: 6px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	margin-top: 0.5rem;
+}
+
+.button.submit .text {
+	padding: 0.75rem 1rem;
+	border-radius: 6px;
+}
+
+.button.submit:hover:not(:disabled) {
+	background-color: var(--color-primary-hover);
+	translate: none;
+}
+
+.button.submit:disabled {
+	background-color: #9ca3af;
+	cursor: not-allowed;
+}
+
+/* Link Button */
+.button.link-button {
+	background: none;
+	border: none;
+	color: var(--color-primary);
+	cursor: pointer;
+	font-weight: 600;
+	text-decoration: underline;
+	font-size: inherit;
+	padding: 0;
+	margin: 0;
+}
+
+.button.link-button .text {
+	padding: 0;
+	border-radius: 0;
+}
+
+.button.link-button:hover {
+	color: var(--color-primary-hover);
+	translate: none;
+}
+
+/* Back Button */
+.button.back-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background-color: #f9fafb;
+	color: #374151;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	padding: 0;
+	margin-bottom: 1.5rem;
+}
+
+.button.back-button .text {
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.button.back-button:hover {
+	background-color: #3b82f6;
+	color: #ffffff;
+	border-color: #3b82f6;
+	translate: none;
+}
+
+.button.back-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* User Menu Button */
+.button.user-menu-button {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	background-color: #f9fafb;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	padding: 0;
+	font-size: 14px;
+}
+
+.button.user-menu-button .text {
+	padding: 0.5rem 1rem;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.button.user-menu-button:hover {
+	background-color: #f3f4f6;
+	border-color: #d1d5db;
+	translate: none;
+}
+
+/* Mobile Menu Toggle */
+.button.mobile-menu-toggle {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	gap: 0.25rem;
+	padding: 0;
+	margin: 0;
+}
+
+.button.mobile-menu-toggle .text {
+	padding: 0;
+	border-radius: 0;
+}
+
+.button.mobile-menu-toggle:hover {
+	translate: none;
+}
+
+/* Mobile Filter Toggle */
+.button.mobile-filter-toggle {
+	position: fixed;
+	top: 1rem;
+	left: 1rem;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background-color: #3b82f6;
+	color: white;
+	border: none;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	padding: 0;
+}
+
+.button.mobile-filter-toggle .text {
+	padding: 0.75rem 1rem;
+	border-radius: 0.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.button.mobile-filter-toggle:hover {
+	background-color: #2563eb;
+	translate: none;
+}
+
+.button.mobile-filter-toggle.toggle-behind {
+	z-index: 45;
+}
+
+/* Details Button */
+.button.details {
+	background-color: #f9fafb;
+	color: #374151;
+	font-size: 14px;
+	font-weight: 500;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	padding: 0;
+}
+
+.button.details .text {
+	padding: 8px 16px;
+	border-radius: 6px;
+}
+
+.button.details:hover {
+	background-color: #2563eb;
+	color: #ffffff;
+	border-color: #2563eb;
+	translate: none;
+}
+
+.button.details:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Add Skill Button */
+.button.add-skill {
+	background-color: var(--color-primary);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	padding: 0;
+}
+
+.button.add-skill .text {
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+}
+
+.button.add-skill:hover {
+	background-color: var(--color-primary-hover);
+	translate: none;
+}
+
+/* Remove Skill Button */
+.button.remove-skill {
+	background: none;
+	border: none;
+	color: #0369a1;
+	cursor: pointer;
+	font-size: 1.25rem;
+	line-height: 1;
+	padding: 0;
+	width: 1.5rem;
+	height: 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	transition: background-color 0.2s ease;
+}
+
+.button.remove-skill .text {
+	padding: 0;
+	border-radius: 50%;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.button.remove-skill:hover {
+	background-color: rgba(3, 105, 161, 0.1);
+	translate: none;
+}
+
+/* Save Button */
+.button.save {
+	background-color: var(--color-primary);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	padding: 0;
+}
+
+.button.save .text {
+	padding: 0.75rem 2rem;
+	border-radius: 6px;
+}
+
+.button.save:hover:not(:disabled) {
+	background-color: var(--color-primary-hover);
+	translate: none;
+}
+
+.button.save:disabled {
+	background-color: #9ca3af;
+	cursor: not-allowed;
+}
+
+/* Logout Button */
+.button.logout {
+	background-color: #dc2626;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	padding: 0;
+}
+
+.button.logout .text {
+	padding: 0.75rem 1.5rem;
+	border-radius: 6px;
+}
+
+.button.logout:hover {
+	background-color: #b91c1c;
+	translate: none;
 }
 </style>

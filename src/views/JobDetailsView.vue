@@ -1,8 +1,8 @@
 <template>
 	<div class="job-details">
 		<div class="job-details-container">
-			<button
-				class="back-button"
+			<Button
+				variant="back-button"
 				@click="handleGoBack"
 				@keydown="handleKeyDown"
 				tabindex="0"
@@ -12,13 +12,13 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 				</svg>
 				<span>Back to Jobs</span>
-			</button>
+			</Button>
 
 			<div v-if="loading" class="loading-state">
 				<div class="loading-spinner">
-					<svg class="animate-spin" fill="none" viewBox="0 0 24 24">
-						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					<svg class="spinning-icon" fill="none" viewBox="0 0 24 24">
+						<circle class="spinner-circle-bg" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+						<path class="spinner-path-fg" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 					</svg>
 				</div>
 				<p class="loading-text">Loading job details...</p>
@@ -34,7 +34,7 @@
 				<p class="error-message">
 					{{ notFound ? 'The job you are looking for does not exist.' : 'There was an error loading the job details.' }}
 				</p>
-				<BaseButton 
+				<Button 
 					@click="handleGoBack" 
 					variant="primary" 
 					text="Back to Jobs"
@@ -176,7 +176,7 @@
 				</div>
 
 				<div class="job-actions">
-					<BaseButton
+					<Button
 						@click="handleApplyJob"
 						@keydown="handleKeyDown"
 						tabindex="0"
@@ -186,7 +186,7 @@
 						text="Apply for this Job"
 						class="apply-button"
 					/>
-					<BaseButton
+					<Button
 						@click="handleSaveJob"
 						@keydown="handleKeyDown"
 						tabindex="0"
@@ -205,7 +205,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import BaseButton from '../components/ui/Button.vue';
+import Button from '../components/ui/Button.vue';
 import { useJobs } from '../composables/useJobs';
 import type { Job } from '../types/job';
 
@@ -279,37 +279,6 @@ onMounted(() => {
 	max-width: 64rem;
 	margin: 0 auto;
 	padding: 2rem 1rem;
-}
-
-.back-button {
-	display: flex;
-	align-items: center;
-	margin-bottom: 1.5rem;
-	padding: 0.5rem 1rem;
-	background-color: white;
-	border: 1px solid #d1d5db;
-	border-radius: 0.5rem;
-	color: #374151;
-	cursor: pointer;
-	transition: all 0.2s;
-	font-size: 0.875rem;
-	font-weight: 500;
-}
-
-.back-button:hover {
-	background-color: #f9fafb;
-	border-color: #9ca3af;
-}
-
-.back-button:focus {
-	outline: none;
-	box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
-
-.back-icon {
-	width: 1rem;
-	height: 1rem;
-	margin-right: 0.5rem;
 }
 
 .job-card {
@@ -536,17 +505,22 @@ onMounted(() => {
 	margin-bottom: 1rem;
 }
 
-.loading-spinner svg {
+.spinning-icon {
 	width: 3rem;
 	height: 3rem;
 	color: #3b82f6;
+	animation: spin-animation 1s linear infinite;
 }
 
-.animate-spin {
-	animation: spin 1s linear infinite;
+.spinner-circle-bg {
+	opacity: 0.2;
 }
 
-@keyframes spin {
+.spinner-path-fg {
+	opacity: 1;
+}
+
+@keyframes spin-animation {
 	from {
 		transform: rotate(0deg);
 	}
