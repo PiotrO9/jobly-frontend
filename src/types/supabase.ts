@@ -27,14 +27,14 @@ export interface Job {
 	posted_days_ago: number
 	employment_type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
 	experience_level: 'Junior' | 'Mid' | 'Senior' | 'Lead'
-	salary_min?: number
-	salary_max?: number
+	salary_min?: number | null
+	salary_max?: number | null
 	currency: string
 	description?: string
 	skills?: string[]
 	requirements?: string[]
 	benefits?: string[]
-	equity?: number
+	equity?: number | null
 	remote_allowed: boolean
 	status: 'active' | 'closed' | 'draft'
 	views_count: number

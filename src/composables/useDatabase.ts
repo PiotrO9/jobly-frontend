@@ -30,8 +30,8 @@ export function useDatabase<T = Record<string, unknown>>() {
 			}
 
 			if (options?.orderBy) {
-				query = query.order(options.orderBy.column, { 
-					ascending: options.orderBy.ascending ?? true 
+				query = query.order(options.orderBy.column, {
+					ascending: options.orderBy.ascending ?? true
 				})
 			}
 
@@ -191,4 +191,4 @@ export function useDatabase<T = Record<string, unknown>>() {
 
 		supabase
 	}
-} 
+}

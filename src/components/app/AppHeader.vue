@@ -84,7 +84,7 @@ function handleClickOutside(event: Event) {
 	const target = event.target as HTMLElement
 	const userMenu = document.querySelector('.user-menu')
 	const userButton = document.querySelector('.user-menu-button')
-	
+
 	if (userMenu && !userMenu.contains(target) && !userButton?.contains(target)) {
 		isUserMenuOpen.value = false
 	}
@@ -153,8 +153,8 @@ onUnmounted(() => {
 							<div class="dropdown-content">
 								<h3 class="dropdown-title">Job Categories</h3>
 								<ul class="categories-list">
-									<li 
-										v-for="category in categories" 
+									<li
+										v-for="category in categories"
 										:key="category.id"
 										class="category-item"
 									>
@@ -173,14 +173,14 @@ onUnmounted(() => {
 									</li>
 								</ul>
 								<div class="dropdown-footer">
-									<Button 
-										variant="details" 
-										text="View All Jobs" 
-										@click="handleViewAllJobs" 
-										@keydown="handleKeyDown" 
-										tabindex="0" 
+									<Button
+										variant="details"
+										text="View All Jobs"
+										@click="handleViewAllJobs"
+										@keydown="handleKeyDown"
+										tabindex="0"
 										class="view-all-link"
-										aria-label="View all jobs" 
+										aria-label="View all jobs"
 									/>
 								</div>
 							</div>
@@ -194,9 +194,9 @@ onUnmounted(() => {
 					<Button variant="secondary" text="Login" link="/login" />
 					<Button variant="primary" text="Sign Up" link="/register" />
 				</div>
-				
+
 				<div v-else class="user-menu-wrapper">
-					<button 
+					<button
 						class="user-menu-button"
 						@click="handleToggleUserMenu"
 						@keydown="handleKeyDown"
@@ -212,7 +212,7 @@ onUnmounted(() => {
 							<polyline points="6,9 12,15 18,9"></polyline>
 						</svg>
 					</button>
-					
+
 					<div v-if="isUserMenuOpen" class="user-menu">
 						<div class="user-menu-header">
 							<div class="user-info">
@@ -242,7 +242,7 @@ onUnmounted(() => {
 				</div>
 			</div>
 
-			<button 
+			<button
 				class="mobile-menu-toggle"
 				@click="handleToggleMobileMenu"
 				@keydown="handleKeyDown"
@@ -256,7 +256,7 @@ onUnmounted(() => {
 			</button>
 		</div>
 
-		<div 
+		<div
 			v-if="isMobileMenuOpen"
 			class="mobile-overlay"
 			@click="handleCloseMobileMenu"
@@ -265,7 +265,7 @@ onUnmounted(() => {
 		<nav class="mobile-nav" :class="{ 'mobile-nav-open': isMobileMenuOpen }">
 			<div class="mobile-nav-header">
 				<div class="mobile-nav-title">Menu</div>
-				<button 
+				<button
 					class="mobile-nav-close"
 					@click="handleCloseMobileMenu"
 					@keydown="handleKeyDown"
@@ -274,7 +274,7 @@ onUnmounted(() => {
 				>
 				</button>
 			</div>
-			
+
 			<div class="mobile-nav-content">
 				<ul class="mobile-menu-list">
 					<li class="mobile-menu-item">
@@ -296,9 +296,9 @@ onUnmounted(() => {
 							Jobs
 						</router-link>
 					</li>
-					
+
 					<li class="mobile-menu-item mobile-categories-item">
-						<button 
+						<button
 							class="mobile-categories-toggle"
 							@click="toggleMobileCategories"
 							@keydown="handleKeyDown"
@@ -309,23 +309,23 @@ onUnmounted(() => {
 							<div class="mobile-categories-toggle-content">
 								<span>Job Categories</span>
 							</div>
-							<svg 
-								class="mobile-categories-arrow" 
+							<svg
+								class="mobile-categories-arrow"
 								:class="{ 'rotated': showMobileCategories }"
-								xmlns="http://www.w3.org/2000/svg" 
-								width="16" 
-								height="16" 
-								viewBox="0 0 24 24" 
-								fill="none" 
-								stroke="currentColor" 
-								stroke-width="2" 
-								stroke-linecap="round" 
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
 								stroke-linejoin="round"
 							>
 								<polyline points="6,9 12,15 18,9"></polyline>
 							</svg>
 						</button>
-						
+
 						<div v-if="showMobileCategories" class="mobile-categories-list">
 							<button
 								v-for="category in categories"
@@ -344,7 +344,7 @@ onUnmounted(() => {
 						</div>
 					</li>
 				</ul>
-				
+
 				<div v-if="!authStore.isAuthenticated" class="mobile-auth-section">
 					<div class="mobile-auth-buttons">
 						<router-link to="/login" class="mobile-auth-link mobile-login" @click="handleCloseMobileMenu">
@@ -355,7 +355,7 @@ onUnmounted(() => {
 						</router-link>
 					</div>
 				</div>
-				
+
 				<div v-else class="mobile-user-section">
 					<div class="mobile-user-info">
 						<div class="mobile-user-avatar">
@@ -366,7 +366,7 @@ onUnmounted(() => {
 							<div class="mobile-user-status">Logged in</div>
 						</div>
 					</div>
-					
+
 					<div class="mobile-user-actions">
 						<button class="mobile-user-action" @click="handleNavigateToSettings">
 							<svg class="mobile-menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -394,11 +394,20 @@ onUnmounted(() => {
 <style scoped>
 .header {
 	width: 100%;
+	height: 70px;
 	background-color: var(--color-background, #ffffff);
 	border-bottom: 1px solid var(--color-border);
 	position: sticky;
 	top: 0;
 	z-index: 110;
+
+	@media (min-width: 768px) {
+		height: 80px;
+	}
+
+	@media (min-width: 1024px) {
+		height: 100px;
+	}
 }
 
 .header-wrapper {
@@ -591,7 +600,7 @@ onUnmounted(() => {
 	top: 0;
 	right: -100%;
 	height: 100vh;
-	width: 320px;
+	width: min(320px, 100dvw);
 	background-color: var(--color-background, #ffffff);
 	box-shadow: -2px 0 20px rgba(0, 0, 0, 0.15);
 	transition: right 0.3s ease-in-out;
@@ -1191,7 +1200,7 @@ onUnmounted(() => {
 	.user-email {
 		display: none;
 	}
-	
+
 	.user-menu {
 		width: 260px;
 	}
