@@ -16,4 +16,4 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 	}
 })
 
-export type { User, Session, AuthError } from '@supabase/supabase-js' 
+export type { User, Session, AuthError } from '@supabase/supabase-js'
