@@ -2,17 +2,21 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useThemeStore } from '@/stores/theme';
 import Button from '@/components/ui/Button.vue';
 import MenuItem from '@/components/ui/MenuItem.vue';
 import { useJobCategories } from '@/composables/useJobCategories';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const themeStore = useThemeStore();
 const { categories, fetchCategories } = useJobCategories();
 
 const isMobileMenuOpen = ref(false);
 const isUserMenuOpen = ref(false);
 const showMobileCategories = ref(false);
+
+const emit = defineEmits(['category-selected']);
 
 watch(isMobileMenuOpen, (isOpen) => {
     if (isOpen) {
@@ -99,7 +103,11 @@ watch(isUserMenuOpen, (isOpen) => {
 });
 
 function handleNavigateToCategory(categoryId: string) {
-    router.push({ path: '/jobs', query: { category: categoryId } });
+    router.push({
+        path: '/jobs',
+        query: { category: categoryId },
+    });
+    emit('category-selected');
 }
 
 function toggleMobileCategories() {
@@ -114,6 +122,11 @@ function handleMobileCategoryClick(categoryId: string) {
 
 function handleViewAllJobs() {
     router.push({ path: '/jobs' });
+}
+
+function closeDropdown() {
+    // This will be called when a category is selected
+    // The MenuItem component will handle closing the dropdown
 }
 
 onMounted(async () => {
@@ -142,7 +155,7 @@ onUnmounted(() => {
                     <li class="menu-item">
                         <router-link to="/jobs" class="menu-link"> Jobs </router-link>
                     </li>
-                    <MenuItem label="Find a job" hasArrow>
+                    <MenuItem label="Find a job" hasArrow @category-selected="closeDropdown">
                         <template #content>
                             <div class="dropdown-content">
                                 <h3 class="dropdown-title">Job Categories</h3>
@@ -247,13 +260,11 @@ onUnmounted(() => {
                                     <path
                                         d="m12 1 1.27 2.76 2.76 1.27-2.76 1.27L12 9l-1.27-2.76-2.76-1.27 2.76-1.27L12 1"
                                     ></path>
-                                    <path
-                                        d="m19 12 1.27 2.76 2.76 1.27-2.76 1.27L19 21l-1.27-2.76-2.76-1.27 2.76-1.27L19 12"
-                                    ></path>
+                                    <path d="M12 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"></path>
                                 </svg>
-                                Account Settings
+                                <span>Settings</span>
                             </button>
-                            <button class="user-menu-item logout" @click="handleSignOut">
+                            <button class="user-menu-item" @click="handleSignOut">
                                 <svg
                                     class="menu-icon"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -267,15 +278,60 @@ onUnmounted(() => {
                                     stroke-linejoin="round"
                                 >
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                    <polyline points="16,17 21,12 16,7"></polyline>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
                                 </svg>
-                                Sign Out
+                                <span>Sign out</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <button
+                class="theme-toggle"
+                @click="themeStore.toggleTheme"
+                @keydown="handleKeyDown"
+                tabindex="0"
+                :aria-label="themeStore.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+            >
+                <svg
+                    v-if="themeStore.isDarkMode"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
 
             <button
                 class="mobile-menu-toggle"
@@ -498,8 +554,9 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.25rem;
-    max-width: 1200px;
+    padding: 1rem 2rem;
+    position: relative;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -515,37 +572,43 @@ onUnmounted(() => {
 }
 
 .desktop-nav {
-    display: none;
+    display: flex;
+    align-items: center;
+    margin-left: 120px;
 }
 
 .menu-list {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 32px;
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
 .menu-item {
-    font-weight: 600;
+    position: relative;
 }
 
 .menu-link {
-    color: var(--color-text-secondary);
+    color: var(--text-color);
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 16px;
     font-weight: 500;
-    padding: 0.5rem 0;
     transition: color 0.2s;
 }
 
 .menu-link:hover {
-    color: var(--color-text-primary);
+    color: var(--color-primary);
 }
 
 .desktop-actions {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    margin-left: auto;
+    margin-right: 32px;
 }
 
 .dropdown-content {
@@ -1097,46 +1160,39 @@ onUnmounted(() => {
 .user-menu-button {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    gap: 8px;
+    padding: 8px;
+    border: none;
+    background: none;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    transition: background-color 0.2s;
 }
 
 .user-menu-button:hover {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(0, 96, 251, 0.1);
+    background-color: var(--hover-color);
 }
 
 .user-avatar {
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
     background-color: var(--color-primary);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.user-email {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-color);
     font-weight: 500;
 }
 
+.user-email {
+    font-size: 14px;
+    color: var(--color-text-primary);
+}
+
 .chevron-icon {
-    transition: transform 0.2s ease;
-    color: #6b7280;
+    transition: transform 0.2s;
 }
 
 .chevron-icon.rotated {
@@ -1145,206 +1201,130 @@ onUnmounted(() => {
 
 .user-menu {
     position: absolute;
-    top: calc(100% + 0.5rem);
+    top: 100%;
     right: 0;
-    background: white;
-    border: 1px solid #e5e7eb;
+    margin-top: 8px;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     box-shadow:
-        0 10px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    width: 280px;
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-width: 240px;
     z-index: 50;
 }
 
 .user-menu-header {
-    padding: 1rem;
+    padding: 16px;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 4px;
 }
 
 .user-name {
-    font-weight: 600;
-    color: var(--text-color);
-    font-size: 0.875rem;
-}
-
-.user-status {
-    font-size: 0.75rem;
-    color: var(--gray-600);
+    font-weight: 500;
+    color: var(--color-text-primary);
 }
 
 .user-menu-divider {
     height: 1px;
-    background-color: #e5e7eb;
+    background-color: var(--color-border);
+    margin: 4px 0;
 }
 
 .user-menu-items {
-    padding: 0.5rem 0;
+    padding: 8px 0;
 }
 
 .user-menu-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;
+    padding: 12px 16px;
     width: 100%;
-    padding: 0.75rem 1rem;
-    background: none;
     border: none;
-    text-align: left;
-    font-size: 0.875rem;
-    color: var(--text-color);
+    background: none;
+    color: var(--color-text-primary);
+    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s;
 }
 
 .user-menu-item:hover {
-    background-color: #f9fafb;
-}
-
-.user-menu-item.logout {
-    color: #dc2626;
-}
-
-.user-menu-item.logout:hover {
-    background-color: #fef2f2;
+    background-color: var(--hover-color);
 }
 
 .menu-icon {
-    flex-shrink: 0;
-    color: var(--gray-600);
+    color: var(--color-text-primary);
 }
 
-.user-menu-item.logout .menu-icon {
-    color: #dc2626;
-}
-
-.mobile-auth {
-    border-top: 1px solid #f3f4f6;
-    margin-top: 1rem;
-    padding-top: 1rem;
-}
-
-.mobile-signup {
-    padding: 1.5rem;
-    border-bottom: none;
-}
-
-.mobile-user-section {
-    border-top: 1px solid #f3f4f6;
-    margin-top: 1rem;
-    padding-top: 1rem;
-}
-
-.mobile-user-info {
+.user-menu-button {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #f3f4f6;
+    gap: 8px;
+    padding: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    transition: background-color 0.2s;
 }
 
-.mobile-user-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
+.user-menu-button:hover {
+    background-color: var(--hover-color);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
     background-color: var(--color-primary);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 500;
 }
 
-.mobile-user-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+.user-email {
+    font-size: 14px;
+    color: var(--color-text-primary);
 }
 
-.mobile-user-email {
-    font-weight: 600;
-    color: var(--text-color);
-    font-size: 0.875rem;
-}
-
-.mobile-user-status {
-    font-size: 0.75rem;
-    color: var(--gray-600);
-}
-
-.mobile-menu-link.logout {
-    color: #dc2626;
-}
-
-@media (max-width: 640px) {
-    .user-email {
-        display: none;
-    }
-
-    .user-menu {
-        width: 260px;
-    }
-}
-
-.arrow {
-    margin-left: 0.25rem;
+.chevron-icon {
     transition: transform 0.2s;
 }
 
-.arrow--open {
+.chevron-icon.rotated {
     transform: rotate(180deg);
 }
 
-/* 1. Rozsynchronizowane „View All Jobs”? Upewnij się, że leave ma te same przejścia co enter: */
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease;
-}
-
-/* 2. Klasy początkowe i końcowe dla leave/enter: */
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-}
-.fade-slide-enter-to,
-.fade-slide-leave-from {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 3. Wyłącz wszystkie dodatkowe przejścia w stopce, które mogą opóźniać znikanie */
-.dropdown-footer * {
-    transition: none !important;
-}
-
-/* --- już pewnie masz to poniżej — ale upewnij się, że zostaje: --- */
-.dropdown-content {
-    /* …istniejące style… */
-    border: 2px solid var(--gray-600, #4b5563);
-    border-radius: 1rem;
-    background-color: var(--color-background, #ffffff);
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
     position: absolute;
-    top: 100%;
-    left: 0;
-    padding: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    min-width: 320px;
-    max-width: 400px;
-    z-index: 100;
+    right: 0;
 }
 
-.category-link:hover,
-.category-link:focus {
-    background-color: var(--color-gray-100, #f3f4f6);
-    transform: translateX(2px);
+.theme-toggle:hover {
+    background-color: var(--hover-color);
+}
+
+.theme-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
 }
 </style>
