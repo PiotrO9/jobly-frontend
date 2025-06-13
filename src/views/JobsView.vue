@@ -304,7 +304,6 @@ onUnmounted(() => {
     min-height: 100vh;
     background-color: var(--color-background-secondary);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    padding-top: 6rem;
 }
 
 .mobile-filter-toggle {
@@ -628,7 +627,6 @@ onUnmounted(() => {
 @media (min-width: 1024px) {
     .job-board {
         flex-direction: row;
-        padding-top: 7rem;
     }
 
     .mobile-filter-toggle {
