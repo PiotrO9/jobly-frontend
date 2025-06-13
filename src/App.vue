@@ -16,6 +16,6 @@ import AppFooter from '@/components/app/AppFooter.vue'
 .app {
 	width: 100%;
 	height: calc(100% - 100px);
-	margin-top: -100px;
+	/* margin-top: -100px; */
 }
 </style>

@@ -34,9 +34,9 @@
 				<p class="error-message">
 					{{ notFound ? 'The job you are looking for does not exist.' : 'There was an error loading the job details.' }}
 				</p>
-				<Button 
-					@click="handleGoBack" 
-					variant="primary" 
+				<Button
+					@click="handleGoBack"
+					variant="primary"
 					text="Back to Jobs"
 					class="error-back-btn"
 				/>
@@ -57,7 +57,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="job-meta">
 						<div class="salary-range">
 							<span class="salary-label">Salary</span>
@@ -76,9 +76,9 @@
 						<h3 class="section-title">Job Description</h3>
 						<p class="job-description">{{ job.description }}</p>
 						<p class="job-description-extended">
-							We are looking for a talented {{ job.title.toLowerCase() }} to join our dynamic team. 
-							You will be responsible for developing high-quality software solutions, collaborating with 
-							cross-functional teams, and contributing to our innovative projects. This is an excellent 
+							We are looking for a talented {{ job.title.toLowerCase() }} to join our dynamic team.
+							You will be responsible for developing high-quality software solutions, collaborating with
+							cross-functional teams, and contributing to our innovative projects. This is an excellent
 							opportunity to grow your career in a supportive environment.
 						</p>
 					</section>
@@ -86,9 +86,9 @@
 					<section class="job-section">
 						<h3 class="section-title">Required Skills</h3>
 						<div class="skills-container">
-							<span 
-								v-for="skill in job.skills" 
-								:key="skill" 
+							<span
+								v-for="skill in job.skills"
+								:key="skill"
 								class="skill-tag"
 							>
 								{{ skill }}
@@ -99,9 +99,9 @@
 					<section class="job-section">
 						<h3 class="section-title">Requirements</h3>
 						<ul class="requirements-list">
-							<li 
-								v-for="requirement in job.requirements" 
-								:key="requirement" 
+							<li
+								v-for="requirement in job.requirements"
+								:key="requirement"
 								class="requirement-item"
 							>
 								{{ requirement }}
@@ -129,9 +129,9 @@
 					<section class="job-section">
 						<h3 class="section-title">What We Offer</h3>
 						<ul class="benefits-list">
-							<li 
-								v-for="benefit in job.benefits" 
-								:key="benefit" 
+							<li
+								v-for="benefit in job.benefits"
+								:key="benefit"
 								class="benefit-item"
 							>
 								<svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,15 +219,15 @@ const notFound = ref(false);
 
 async function loadJobDetails() {
 	const jobId = route.params.id as string;
-	
+
 	if (!jobId) {
 		notFound.value = true;
 		return;
 	}
-	
+
 	try {
 		const result = await getJobById(jobId);
-		
+
 		if (result.success && result.data) {
 			job.value = result.data;
 		} else {
@@ -279,6 +279,9 @@ onMounted(() => {
 	max-width: 64rem;
 	margin: 0 auto;
 	padding: 2rem 1rem;
+	gap: 2rem;
+	display: flex;
+	flex-direction: column;
 }
 
 .job-card {
@@ -668,4 +671,4 @@ onMounted(() => {
 		margin-right: auto;
 	}
 }
-</style> 
+</style>

@@ -103,29 +103,36 @@
 
             <div class="filter-group">
                 <label class="filter-label">Salary (USD)</label>
-                <div class="dual-range-container">
-                    <input
-                        type="range"
-                        v-model="localFilters.salaryMin"
-                        :min="salaryRange.min"
-                        :max="localFilters.salaryMax"
-                        class="filter-range range-min"
-                        @input="handleSalaryMinChange"
-                    />
-                    <input
-                        type="range"
-                        v-model="localFilters.salaryMax"
-                        :min="localFilters.salaryMin"
-                        :max="salaryRange.max"
-                        class="filter-range range-max"
-                        @input="handleSalaryMaxChange"
-                    />
+                <div class="salary-inputs">
+                    <div class="salary-input-group">
+                        <input
+                            type="number"
+                            v-model.number="localFilters.salaryMin"
+                            :min="salaryRange.min"
+                            :max="localFilters.salaryMax"
+                            class="salary-input"
+                            @input="handleSalaryMinChange"
+                            @blur="validateSalaryMin"
+                        />
+                        <span class="salary-suffix">k</span>
+                    </div>
+                    <span class="salary-separator">-</span>
+                    <div class="salary-input-group">
+                        <input
+                            type="number"
+                            v-model.number="localFilters.salaryMax"
+                            :min="localFilters.salaryMin"
+                            :max="salaryRange.max"
+                            class="salary-input"
+                            @input="handleSalaryMaxChange"
+                            @blur="validateSalaryMax"
+                        />
+                        <span class="salary-suffix">k</span>
+                    </div>
                 </div>
                 <div class="range-values">
                     <span>${{ salaryRange.min }}k</span>
-                    <span class="current-values"
-                        >${{ localFilters.salaryMin }}k - ${{ localFilters.salaryMax }}k</span
-                    >
+                    <span class="current-values">${{ localFilters.salaryMin }}k - ${{ localFilters.salaryMax }}k</span>
                     <span>${{ salaryRange.max }}k</span>
                 </div>
             </div>
@@ -218,15 +225,43 @@ function handleFilterChange() {
 }
 
 function handleSalaryMinChange() {
-    if (localFilters.value.salaryMin > localFilters.value.salaryMax) {
-        localFilters.value.salaryMax = localFilters.value.salaryMin;
+    const value = Number(localFilters.value.salaryMin);
+    if (isNaN(value)) return;
+
+    if (value < props.salaryRange.min) {
+        localFilters.value.salaryMin = props.salaryRange.min;
+    } else if (value > localFilters.value.salaryMax) {
+        localFilters.value.salaryMin = localFilters.value.salaryMax;
     }
+    handleFilterChange();
 }
 
 function handleSalaryMaxChange() {
-    if (localFilters.value.salaryMax < localFilters.value.salaryMin) {
-        localFilters.value.salaryMin = localFilters.value.salaryMax;
+    const value = Number(localFilters.value.salaryMax);
+    if (isNaN(value)) return;
+
+    if (value > props.salaryRange.max) {
+        localFilters.value.salaryMax = props.salaryRange.max;
+    } else if (value < localFilters.value.salaryMin) {
+        localFilters.value.salaryMax = localFilters.value.salaryMin;
     }
+    handleFilterChange();
+}
+
+function validateSalaryMin() {
+    const value = Number(localFilters.value.salaryMin);
+    if (isNaN(value)) {
+        localFilters.value.salaryMin = props.salaryRange.min;
+    }
+    handleFilterChange();
+}
+
+function validateSalaryMax() {
+    const value = Number(localFilters.value.salaryMax);
+    if (isNaN(value)) {
+        localFilters.value.salaryMax = props.salaryRange.max;
+    }
+    handleFilterChange();
 }
 
 function handleApplyFilters() {
@@ -321,66 +356,46 @@ function handleKeyDown(event: KeyboardEvent) {
     color: var(--color-text-secondary);
 }
 
-.dual-range-container {
-    position: relative;
-    height: 8px;
+.salary-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin: 8px 0;
 }
 
-.filter-range {
-    position: absolute;
+.salary-input-group {
+    position: relative;
+    flex: 1;
+}
+
+.salary-input {
     width: 100%;
-    height: 8px;
-    background: transparent;
-    border-radius: 4px;
+    padding: 8px 24px 8px 12px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.salary-input:focus {
     outline: none;
-    cursor: pointer;
-    appearance: none;
+    border-color: var(--color-info);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.salary-suffix {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    font-size: 14px;
     pointer-events: none;
 }
 
-.filter-range::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: var(--color-info);
-    border-radius: 50%;
-    cursor: pointer;
-    pointer-events: all;
-    position: relative;
-    z-index: 2;
-}
-
-.filter-range::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: var(--color-info);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-    pointer-events: all;
-    position: relative;
-    z-index: 2;
-}
-
-.range-min {
-    z-index: 1;
-}
-
-.range-max {
-    z-index: 2;
-}
-
-.dual-range-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    z-index: 0;
+.salary-separator {
+    color: var(--color-text-secondary);
+    font-size: 14px;
 }
 
 .range-values {

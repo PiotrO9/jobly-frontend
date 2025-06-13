@@ -49,12 +49,12 @@ onMounted(() => {
 		router.push('/login')
 		return
 	}
-	
+
 	if (!isRecruiter.value) {
 		// User is not a recruiter, stay on page but show message
 		return
 	}
-	
+
 	if (!userCompanyId.value) {
 		errorMessage.value = 'You need to be associated with a company to post jobs. Please update your profile.'
 	}
@@ -150,10 +150,10 @@ async function handleSubmit(isDraft = false) {
 		const result = await createJob(jobData)
 
 		if (result.success) {
-			successMessage.value = isDraft 
-				? 'Job saved as draft successfully!' 
+			successMessage.value = isDraft
+				? 'Job saved as draft successfully!'
 				: 'Job posted successfully!'
-			
+
 			setTimeout(() => {
 				router.push('/recruiter/jobs')
 			}, 2000)
@@ -204,14 +204,14 @@ function handlePublishJob() {
 						This feature is only available to recruiters. If you are a recruiter and need access to this feature, please contact your administrator or update your account settings.
 					</p>
 					<div class="access-denied-actions">
-						<Button 
-							variant="primary" 
-							text="Go to Settings" 
+						<Button
+							variant="primary"
+							text="Go to Settings"
 							link="/account/settings"
 						/>
-						<Button 
-							variant="secondary" 
-							text="Browse Jobs" 
+						<Button
+							variant="secondary"
+							text="Browse Jobs"
 							link="/jobs"
 						/>
 					</div>
@@ -229,7 +229,7 @@ function handlePublishJob() {
 				<!-- Basic Information -->
 				<section class="form-section">
 					<h2 class="section-title">Basic Information</h2>
-					
+
 					<div class="form-group">
 						<label for="title" class="form-label">Job Title*</label>
 						<input
@@ -313,7 +313,7 @@ function handlePublishJob() {
 				<!-- Compensation -->
 				<section class="form-section">
 					<h2 class="section-title">Compensation</h2>
-					
+
 					<div class="form-row">
 						<div class="form-group">
 							<label for="salary_min" class="form-label">Minimum Salary (PLN)</label>
@@ -355,7 +355,7 @@ function handlePublishJob() {
 							/>
 						</div>
 					</div>
-					
+
 					<div v-if="errors.salary.length > 0" class="form-errors">
 						<span v-for="error in errors.salary" :key="error" class="form-error">
 							{{ error }}
@@ -366,7 +366,7 @@ function handlePublishJob() {
 				<!-- Job Description -->
 				<section class="form-section">
 					<h2 class="section-title">Job Description</h2>
-					
+
 					<div class="form-group">
 						<label for="description" class="form-label">Description*</label>
 						<textarea
@@ -389,7 +389,7 @@ function handlePublishJob() {
 				<!-- Skills & Requirements -->
 				<section class="form-section">
 					<h2 class="section-title">Skills & Requirements</h2>
-					
+
 					<div class="form-group">
 						<label for="new-skill" class="form-label">Required Skills</label>
 						<div class="input-with-button">
@@ -524,6 +524,12 @@ function handlePublishJob() {
 						:disabled="isSubmitting || jobLoading || !userCompanyId"
 						:loading="isSubmitting || jobLoading"
 					/>
+					<Button
+						type="button"
+						variant="secondary"
+						text="View Company Jobs"
+						link="/recruiter/jobs"
+					/>
 				</div>
 			</form>
 		</div>
@@ -642,7 +648,8 @@ function handlePublishJob() {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 1.5rem;
-	align-items: start;
+	align-items: flex-end;
+	margin-bottom: 1.5rem;
 }
 
 .form-row .form-group {
@@ -801,25 +808,25 @@ function handlePublishJob() {
 	.post-job-wrapper {
 		padding: 0 1rem;
 	}
-	
+
 	.post-job-form {
 		padding: 1.5rem;
 	}
-	
+
 	.form-row {
 		grid-template-columns: 1fr;
 		gap: 1rem;
 	}
-	
+
 	.form-actions {
 		flex-direction: column;
 	}
-	
+
 	.access-denied-card {
 		padding: 2rem;
 		margin: 0 1rem;
 	}
-	
+
 	.access-denied-actions {
 		flex-direction: column;
 	}
